@@ -1,0 +1,42 @@
+﻿<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<a class="navbar-brand" asp-controller="Home" asp-action="Index">Sticky Notes</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<a class="nav-link" href="#">Add note <span class="sr-only">(current)</span></a>
+			</li>
+		</ul>
+
+		<ul class="navbar-nav">
+			@if (User.Identity.IsAuthenticated)
+			{
+				<li class="nav-item">Hello, @User.Identity.Name</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">
+						<i class="fas fa-sign-out-alt"></i>
+						Sign Out
+					</a>
+				</li>
+			}
+			else
+			{
+				<li class="nav-item">
+					<a class="nav-link" href="#">
+						<i class="fas fa-user"></i>
+						Sign In
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">
+						<i class="fas fa-user-plus"></i>
+						Sign Up
+					</a>
+				</li>
+			}
+		</ul>
+	</div>
+</nav>
