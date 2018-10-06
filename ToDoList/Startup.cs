@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,9 @@ namespace ToDoList
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc().AddFluentValidation(options =>
+			services.AddMvc()
+				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+				.AddFluentValidation(options =>
 				{
 					options.RegisterValidatorsFromAssemblyContaining<Startup>();
 					options.LocalizationEnabled = false;
@@ -33,7 +36,7 @@ namespace ToDoList
 			services.AddDbContext<IdentityDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
 
-			services.AddIdentity<ApplicationUser, IdentityRole>(options => 
+			services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 					options.User.RequireUniqueEmail = true)
 				.AddEntityFrameworkStores<IdentityDbContext>()
 				.AddDefaultTokenProviders();
