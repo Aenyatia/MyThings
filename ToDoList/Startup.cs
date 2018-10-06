@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,11 @@ namespace ToDoList
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc();
+			services.AddMvc().AddFluentValidation(options =>
+				{
+					options.RegisterValidatorsFromAssemblyContaining<Startup>();
+					options.LocalizationEnabled = false;
+				});
 
 			services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("ApplicationConnection")));
@@ -28,7 +33,8 @@ namespace ToDoList
 			services.AddDbContext<IdentityDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
 
-			services.AddIdentity<ApplicationUser, IdentityRole>()
+			services.AddIdentity<ApplicationUser, IdentityRole>(options => 
+					options.User.RequireUniqueEmail = true)
 				.AddEntityFrameworkStores<IdentityDbContext>()
 				.AddDefaultTokenProviders();
 		}
@@ -39,6 +45,7 @@ namespace ToDoList
 				app.UseDeveloperExceptionPage();
 
 			app.UseStaticFiles();
+			app.UseAuthentication();
 			app.UseMvcWithDefaultRoute();
 		}
 	}
