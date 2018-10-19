@@ -23,12 +23,12 @@ namespace ToDoList.Controllers
 
 		[HttpGet]
 		[AllowAnonymous]
-		public IActionResult SignUp() => View();
+		public IActionResult Register() => View();
 
 		[HttpPost]
 		[AllowAnonymous]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> SignUp(SignUpViewModel viewModel)
+		public async Task<IActionResult> Register(SignUpViewModel viewModel)
 		{
 			if (!ModelState.IsValid)
 				return View(viewModel);
@@ -42,7 +42,7 @@ namespace ToDoList.Controllers
 			var identityResult = await _userManager.CreateAsync(user, viewModel.Password);
 
 			if (identityResult.Succeeded)
-				return RedirectToAction("SignIn", "Account");
+				return RedirectToAction("LogIn", "Account");
 
 			foreach (var error in identityResult.Errors)
 				ModelState.AddModelError(string.Empty, error.Description);
@@ -52,12 +52,16 @@ namespace ToDoList.Controllers
 
 		[HttpGet]
 		[AllowAnonymous]
-		public IActionResult SignIn() => View();
+		public IActionResult LogIn(string returnUrl)
+		{
+			ViewBag.ReturnUrl = returnUrl;
+			return View();
+		}
 
 		[HttpPost]
 		[AllowAnonymous]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> SignIn(SignInViewModel viewModel)
+		public async Task<IActionResult> LogIn(SignInViewModel viewModel, string returnUrl)
 		{
 			if (!ModelState.IsValid)
 				return View(viewModel);
@@ -67,9 +71,9 @@ namespace ToDoList.Controllers
 			{
 				await _signInManager.SignOutAsync();
 
-				var result = await _signInManager.PasswordSignInAsync(user, viewModel.Password, false, false);
+				var result = await _signInManager.PasswordSignInAsync(user, viewModel.Password, viewModel.RememberMe, false);
 				if (result.Succeeded)
-					return RedirectToAction("Index", "Home");
+					return Redirect(returnUrl ?? "/");
 			}
 
 			ModelState.AddModelError(string.Empty, "Invalid email or password.");
@@ -78,7 +82,7 @@ namespace ToDoList.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> SignOut()
+		public async Task<IActionResult> LogOut()
 		{
 			await _signInManager.SignOutAsync();
 			return RedirectToAction("Index", "Home");

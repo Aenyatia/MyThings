@@ -1,6 +1,134 @@
-﻿
+﻿@model TasksViewModel
+
 @{
 	ViewData["Title"] = "Index";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="row">
+	<div class="col-lg-2 p-3">
+		<h3>Tasks</h3>
+		<a href="#" class="btn btn-secondary btn-block">
+			Today
+			<span class="badge badge-light badge-pill float-right">14</span>
+		</a>
+		<a href="#" class="btn btn-secondary btn-block">
+			Tomorrow
+			<span class="badge badge-light badge-pill float-right">14</span>
+		</a>
+		<a href="#" class="btn btn-secondary btn-block">
+			Later
+			<span class="badge badge-light badge-pill float-right">14</span>
+		</a>
+		<a href="#" class="btn btn-secondary btn-block">
+			All
+			<span class="badge badge-light badge-pill float-right">14</span>
+		</a>
+		<hr />
+		<h3>Categories</h3>
+		<form class="input-group mb-2" method="post">
+			<input class="form-control" type="text" id="categoryName" placeholder="Create new category">
+			<div class="input-group-append">
+				<button class="btn btn-outline-secondary js-create-category" type="submit">Create</button>
+			</div>
+		</form>
+		@foreach (var category in Model.Categories)
+		{
+			<a href="#" class="btn btn-outline-secondary btn-block">@category.Name</a>
+		}
+	</div>
+
+	<div class="col p-3">
+		<div>
+			<h2>Active Items</h2>
+			<form class="input-group mb-2">
+				<input class="form-control" type="text" placeholder="New category">
+				<div class="input-group-append">
+					<button class="btn btn-outline-secondary" type="submit">Create</button>
+				</div>
+			</form>
+			<ul class="list-group" id="items">
+				<li class="list-group-item">
+					<input type="checkbox" checked />
+					Buy paysafe card
+					<span class="badge badge-danger">High</span>
+					<span class="float-right actions">
+						<a href="#">Complete</a>
+						<a href="#">Delete</a>
+					</span>
+				</li>
+				<li class="list-group-item">
+					<input type="checkbox" checked />
+					Buy paysafe card
+					<span class="badge badge-success">Low</span>
+					<span class="float-right actions">
+						<a href="#">Complete</a>
+						<a href="#">Delete</a>
+					</span>
+				</li>
+				<li class="list-group-item">
+					<input type="checkbox" checked />
+					Buy paysafe card
+					<span class="float-right actions">
+						<a href="#">Complete</a>
+						<a href="#">Delete</a>
+					</span>
+				</li>
+				<li class="list-group-item">
+					<input type="checkbox" checked />
+					Buy paysafe card
+					<span class="float-right actions">
+						<a href="#">Complete</a>
+						<a href="#">Delete</a>
+					</span>
+				</li>
+			</ul>
+		</div>
+		<div class="mt-5">
+			<h2>Completed Items</h2>
+			<ul class="list-group">
+				<li class="list-group-item">
+					<input type="checkbox" checked />
+					Buy paysafe card
+					<span class="actions">
+						<a href="#">Complete</a>
+						<a href="#">Delete</a>
+					</span>
+				</li>
+				<li class="list-group-item">sdaffdddfsfs</li>
+				<li class="list-group-item">sdaffsaddfs</li>
+				<li class="list-group-item">sdafdffddfs</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="col-2 mt-5 p-3">
+		<h5>Details</h5>
+		<p>Start: </p>
+		<p>End: </p>
+		<p>Priority: </p>
+		<p>Completed: </p>
+	</div>
+</div>
+
+@section scripts{
+	<script>
+		$(document).ready(function () {
+			$(".js-create-category").click(function () {
+				$.ajax({
+					url: "/api/categories",
+					method: "POST",
+					contentType: "application/json",
+					data: JSON.stringify({
+						"name": $("#categoryName").attr("value")
+					})
+				})
+					.done(function () {
+						alert("done");
+					})
+					.fail(function () {
+						alert("fail");
+					});
+			});
+		});
+	</script>
+}

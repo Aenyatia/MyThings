@@ -1,3 +1,11 @@
 ﻿.container {
 	padding-top: 50px;
 }
+
+#items > li .actions {
+	display: none;
+}
+
+#items > li:hover .actions {
+	display: block;
+}

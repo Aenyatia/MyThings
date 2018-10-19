@@ -1,0 +1,29 @@
+﻿@model IEnumerable<ToDoList.Models.ToDo>
+
+@{
+	ViewData["Title"] = "Mine";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Title</th>
+			<th>Description</th>
+			<th>Start</th>
+			<th>End</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var note in Model)
+		{
+			<tr>
+				<td>@note.Id</td>
+				
+			</tr>
+		}
+	</tbody>
+</table>

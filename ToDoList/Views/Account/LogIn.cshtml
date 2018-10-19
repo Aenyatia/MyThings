@@ -19,6 +19,12 @@
 		<input asp-for="Password" type="password" class="form-control">
 		<span asp-validation-for="Password" class="text-danger"></span>
 	</div>
+	<div class="form-group form-check">
+		<input asp-for="RememberMe" type="checkbox" class="form-check-input">
+		<label asp-for="RememberMe" class="form-check-label">Remember me?</label>
+	</div>
+
+	<input hidden value="@ViewBag.ReturnUrl" />
 
 	<button type="submit" class="btn btn-primary">Sign In</button>
 </form>
