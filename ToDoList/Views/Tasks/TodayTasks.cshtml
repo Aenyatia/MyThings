@@ -1,0 +1,40 @@
+﻿@model TodayTasksViewModel
+
+@{
+	ViewData["Title"] = "Today Tasks";
+}
+
+<div class="row">
+	<!-- Tasks and categories -->
+	<partial model="@Model.TasksCategoriesViewModel" name="_TasksAndCategories" />
+
+	<!-- Today -->
+	<div class="col-lg-8 p-lg-3">
+		<h3>today</h3>
+		<ul class="list-group">
+			@if (Model.TodayTasks.Any())
+			{
+				foreach (var task in Model.TodayTasks)
+				{
+					<li class="list-group-item list-group-item-action @task.PriorityClass()" data-task-id="@task.Id">
+						@task.Name
+						<div class="float-right actions">
+							<a asp-controller="Tasks" asp-action="Complete">Complete</a>
+							<a asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Edit</a>
+							<a asp-controller="Tasks" asp-action="Delete">Delete</a>
+						</div>
+					</li>
+				}
+			}
+			else
+			{
+				<li class="list-group-item disabled">No tasks.</li>
+			}
+		</ul>
+	</div>
+
+	<!-- Details -->
+	<div class="col-lg-2 p-lg-3">
+		<div id="detailsTab"></div>
+	</div>
+</div>

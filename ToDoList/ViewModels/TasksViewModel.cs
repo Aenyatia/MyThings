@@ -10,9 +10,6 @@ namespace ToDoList.ViewModels
 		public IEnumerable<TaskViewModel> LaterTasks { get; set; }
 		public IEnumerable<TaskViewModel> NotDoneTasks { get; set; }
 		public IEnumerable<TaskViewModel> RecentlyCompletedTasks { get; set; }
-		public IEnumerable<string> Categories { get; set; }
-
-		public int LaterTasksCount { get; set; }
-		public int HistoryTasksCount { get; set; }
+		public TasksCategoriesViewModel TasksCategoriesViewModel { get; set; }
 	}
 }

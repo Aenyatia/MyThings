@@ -1,0 +1,44 @@
+﻿@model TasksCategoriesViewModel
+
+<div class="col-lg-2 p-lg-3">
+	<h2>Tasks</h2>
+	<div>
+		<a asp-controller="Tasks" asp-action="TodayTasks" class="btn btn-secondary btn-block">
+			Today
+			<span class="badge badge-light badge-pill float-right">@Model.TaskCounters.TodayTasks</span>
+		</a>
+		<a href="#" class="btn btn-secondary btn-block">
+			Tomorrow
+			<span class="badge badge-light badge-pill float-right">@Model.TaskCounters.TomorrowTasks</span>
+		</a>
+		<a href="#" class="btn btn-secondary btn-block">
+			Later
+			<span class="badge badge-light badge-pill float-right">@Model.TaskCounters.LaterTasks</span>
+		</a>
+		<a href="#" class="btn btn-secondary btn-block">
+			Not done
+			<span class="badge badge-light badge-pill float-right">@Model.TaskCounters.NotDoneTasks</span>
+		</a>
+		<a href="#" class="btn btn-secondary btn-block">
+			History
+			<span class="badge badge-light badge-pill float-right">@Model.TaskCounters.HistoryTasks</span>
+		</a>
+	</div>
+
+	<hr />
+
+	<h3>Categories</h3>
+	<form class="input-group mb-2" id="categoryForm">
+		<input class="form-control" type="text" id="categoryName" placeholder="Add category">
+		<div class="input-group-append">
+			<button class="btn btn-outline-secondary js-add-category" type="submit">Add</button>
+		</div>
+	</form>
+
+	<div id="categoriesList">
+		@foreach (var category in Model.Categories)
+		{
+			<a href="#" class="btn btn-outline-secondary btn-block">@category</a>
+		}
+	</div>
+</div>
