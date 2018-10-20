@@ -1,6 +1,6 @@
 ﻿namespace ToDoList.Dtos
 {
-	public class TaskDto
+	public class TaskDetailsDto
 	{
 		public string DueDate { get; set; }
 		public string Priority { get; set; }

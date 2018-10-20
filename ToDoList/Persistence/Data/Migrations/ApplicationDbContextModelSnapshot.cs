@@ -42,6 +42,8 @@ namespace ToDoList.Persistence.Data.Migrations
 
                     b.Property<int?>("CategoryId");
 
+                    b.Property<DateTime?>("CompletedAt");
+
                     b.Property<DateTime>("DueDate");
 
                     b.Property<bool>("IsCompleted");
@@ -56,7 +58,7 @@ namespace ToDoList.Persistence.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("ActiveTasks");
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("ToDoList.Models.Task", b =>

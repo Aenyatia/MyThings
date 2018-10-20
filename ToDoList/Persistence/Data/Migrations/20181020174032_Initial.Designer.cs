@@ -10,8 +10,8 @@ using ToDoList.Persistence.Data;
 namespace ToDoList.Persistence.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181019121217_ChangeModel")]
-    partial class ChangeModel
+    [Migration("20181020174032_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,13 +21,32 @@ namespace ToDoList.Persistence.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("ToDoList.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("ToDoList.Models.Task", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime?>("End");
+                    b.Property<int?>("CategoryId");
+
+                    b.Property<DateTime?>("CompletedAt");
+
+                    b.Property<DateTime>("DueDate");
 
                     b.Property<bool>("IsCompleted");
 
@@ -35,11 +54,20 @@ namespace ToDoList.Persistence.Data.Migrations
 
                     b.Property<int>("Priority");
 
-                    b.Property<DateTime?>("Start");
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ActiveTasks");
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("ToDoList.Models.Task", b =>
+                {
+                    b.HasOne("ToDoList.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
                 });
 #pragma warning restore 612, 618
         }

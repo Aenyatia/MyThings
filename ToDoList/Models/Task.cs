@@ -13,12 +13,19 @@ namespace ToDoList.Models
 		public Category Category { get; protected set; }
 
 		public bool IsCompleted { get; protected set; }
+		public DateTime? CompletedAt { get; protected set; }
 
 		public void Complete()
-			=> IsCompleted = true;
+		{
+			IsCompleted = true;
+			CompletedAt = DateTime.UtcNow;
+		}
 
 		public void Active()
-			=> IsCompleted = false;
+		{
+			IsCompleted = false;
+			CompletedAt = null;
+		}
 
 		protected Task(string userId, string name)
 		{
@@ -27,6 +34,7 @@ namespace ToDoList.Models
 			Priority = Priority.Default;
 			DueDate = DateTime.UtcNow;
 			IsCompleted = false;
+			CompletedAt = null;
 		}
 
 		public static Task Create(string userId, string name)

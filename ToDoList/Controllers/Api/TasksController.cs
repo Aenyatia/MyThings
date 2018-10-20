@@ -45,7 +45,7 @@ namespace ToDoList.Controllers.Api
 			if (task == null)
 				return NotFound();
 
-			var taskDto = new TaskDto
+			var taskDto = new TaskDetailsDto
 			{
 				DueDate = task.DueDate.ToShortDateString(),
 				Priority = task.Priority.ToString(),

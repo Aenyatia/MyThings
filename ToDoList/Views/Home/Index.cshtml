@@ -9,27 +9,27 @@
 <div class="row">
 	<!-- Tasks and categories -->
 	<div class="col-lg-2 p-lg-3">
-		<h3>Tasks</h3>
+		<h2>Tasks</h2>
 		<div>
 			<a href="#" class="btn btn-secondary btn-block">
 				Today
-				<span class="badge badge-light badge-pill float-right" id="today-items-cout"></span>
+				<span class="badge badge-light badge-pill float-right">@Model.TodayTasks.Count()</span>
 			</a>
 			<a href="#" class="btn btn-secondary btn-block">
 				Tomorrow
-				<span class="badge badge-light badge-pill float-right" id="tomorrow-items-count"></span>
+				<span class="badge badge-light badge-pill float-right">@Model.TomorrowTasks.Count()</span>
 			</a>
 			<a href="#" class="btn btn-secondary btn-block">
 				Later
-				<span class="badge badge-light badge-pill float-right" id="later-items-count"></span>
+				<span class="badge badge-light badge-pill float-right">@Model.LaterTasksCount</span>
 			</a>
 			<a href="#" class="btn btn-secondary btn-block">
 				Not done
-				<span class="badge badge-light badge-pill float-right" id="not-done-items-count"></span>
+				<span class="badge badge-light badge-pill float-right">@Model.NotDoneTasks.Count()</span>
 			</a>
 			<a href="#" class="btn btn-secondary btn-block">
 				History
-				<span class="badge badge-light badge-pill float-right" id="history-items-count"></span>
+				<span class="badge badge-light badge-pill float-right">@Model.HistoryTasksCount</span>
 			</a>
 		</div>
 
@@ -46,14 +46,14 @@
 		<div id="categoriesList">
 			@foreach (var category in Model.Categories)
 			{
-				<a href="#" class="btn btn-outline-secondary btn-block">@category.Name</a>
+				<a href="#" class="btn btn-outline-secondary btn-block">@category</a>
 			}
 		</div>
 	</div>
 
 	<!-- Active and completed items -->
 	<div class="col-lg-8 p-lg-3">
-		<h3>Active Items</h3>
+		<h2>Active Items</h2>
 		<form class="input-group mb-2" id="taskForm">
 			<input class="form-control" type="text" id="taskName" placeholder="Enter a new task to do...">
 			<div class="input-group-append">
@@ -62,68 +62,96 @@
 		</form>
 
 		<h3>today</h3>
-		<ul class="list-group" @*id="activeItems"*@>
-			@foreach (var task in Model.ActiveTasks)
+		<ul class="list-group">
+			@if (Model.TodayTasks.Any())
 			{
-				string taskPriority;
-
-				switch (task.Priority)
+				foreach (var task in Model.TodayTasks)
 				{
-					case Priority.Default:
-						taskPriority = string.Empty;
-						break;
-					case Priority.Low:
-						taskPriority = "list-group-item-success";
-						break;
-					case Priority.Medium:
-						taskPriority = "list-group-item-warning";
-						break;
-					case Priority.High:
-						taskPriority = "list-group-item-danger";
-						break;
-					default:
-						throw new InvalidEnumArgumentException();
+					<li class="list-group-item list-group-item-action @task.PriorityClass()" data-task-id="@task.Id">
+						@task.Name
+						<div class="float-right actions">
+							<a asp-controller="Tasks" asp-action="Complete">Complete</a>
+							<a asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Edit</a>
+							<a asp-controller="Tasks" asp-action="Delete">Delete</a>
+						</div>
+					</li>
 				}
-
-				<li class="list-group-item list-group-item-action @taskPriority" data-task-id="@task.Id">
-					@task.Name
-					<div class="float-right actions">
-						<a href="#" class="btn">Complete</a>
-						<a asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id" class="btn">Edit</a>
-						<a href="#" class="btn">Delete</a>
-					</div>
-				</li>
+			}
+			else
+			{
+				<li class="list-group-item disabled">No tasks.</li>
 			}
 		</ul>
 
 		<br />
 
 		<h3>tomorrow</h3>
-		<ul class="list-group" id="activeItems">
-			<li class="list-group-item list-group-item-action">No tasks</li>
+		<ul class="list-group">
+			@if (Model.TomorrowTasks.Any())
+			{
+				foreach (var task in Model.TomorrowTasks)
+				{
+					<li class="list-group-item list-group-item-action @task.PriorityClass()" data-task-id="@task.Id">
+						@task.Name
+						<div class="float-right actions">
+							<a asp-controller="Tasks" asp-action="Complete">Complete</a>
+							<a asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Edit</a>
+							<a asp-controller="Tasks" asp-action="Delete">Delete</a>
+						</div>
+					</li>
+				}
+			}
+			else
+			{
+				<li class="list-group-item disabled">No tasks.</li>
+			}
 		</ul>
 
 		<br />
 
 		<h3>later</h3>
-		<ul class="list-group" id="activeItems">
-			<li class="list-group-item list-group-item-action">No tasks</li>
-		</ul>
-		
-		<br />
-		<br />
-
-		<h3>Completed Items</h3>
-		<ul class="list-group" id="inActiveItems">
-			@foreach (var task in Model.CompletedTasks)
+		<ul class="list-group">
+			@if (Model.LaterTasks.Any())
 			{
-				<li class="list-group-item list-group-item-action list-group-item-secondary" data-task-id="@task.Id">
-					@task.Name
-					<span class="float-right actions">
-						<a asp-controller="Tasks" asp-action="Active" class="btn">Undone</a>
-						<a class="btn">Delete</a>
-					</span>
-				</li>
+				foreach (var task in Model.LaterTasks)
+				{
+					<li class="list-group-item list-group-item-action @task.PriorityClass()" data-task-id="@task.Id">
+						@task.Name
+						<div class="float-right actions">
+							<a asp-controller="Tasks" asp-action="Complete">Complete</a>
+							<a asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Edit</a>
+							<a asp-controller="Tasks" asp-action="Delete">Delete</a>
+						</div>
+					</li>
+				}
+			}
+			else
+			{
+				<li class="list-group-item disabled">No tasks.</li>
+			}
+		</ul>
+
+		<br />
+		
+		<h3>recently completed</h3>
+		<ul class="list-group">
+			@if (Model.RecentlyCompletedTasks.Any())
+			{
+				foreach (var task in Model.RecentlyCompletedTasks)
+				{
+					<li class="list-group-item list-group-item-action @task.PriorityClass()" data-task-id="@task.Id">
+						@task.Name
+						<div class="float-right actions">
+							<a asp-controller="Tasks" asp-action="Complete">Complete</a>
+							<a asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Edit</a>
+							<a asp-controller="Tasks" asp-action="Delete">Delete</a>
+						</div>
+					</li>
+				}
+			}
+			else
+			{
+				<li class="list-group-item disabled">No tasks.</li>
 			}
 		</ul>
 	</div>
