@@ -54,7 +54,7 @@ namespace ToDoList.Persistence.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("ActiveTasks");
                 });
 #pragma warning restore 612, 618
         }

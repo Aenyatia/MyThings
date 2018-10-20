@@ -1,4 +1,4 @@
-﻿namespace ToDoList.ViewModels
+﻿namespace ToDoList.Dtos
 {
 	public class CategoryDto
 	{

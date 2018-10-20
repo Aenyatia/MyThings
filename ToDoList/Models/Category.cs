@@ -4,6 +4,7 @@
 	{
 		public int Id { get; protected set; }
 		public string UserId { get; protected set; }
+
 		public string Name { get; protected set; }
 
 		protected Category(string userId, string name)

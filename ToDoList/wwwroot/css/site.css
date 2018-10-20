@@ -2,10 +2,10 @@
 	padding-top: 50px;
 }
 
-#items > li .actions {
+#activeItems li .actions {
 	display: none;
 }
 
-#items > li:hover .actions {
+#activeItems li:hover .actions {
 	display: block;
 }

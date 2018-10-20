@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using ToDoList.Persistence.Data;
 using ToDoList.Persistence.Extensions;
@@ -21,8 +22,20 @@ namespace ToDoList.Controllers
 
 			var tasks = new TasksViewModel
 			{
-				Tasks = _context.Tasks.ToList(),
-				Categories = _context.Categories.Where(c => c.UserId == userId)
+				ActiveTasks = _context.Tasks
+					.Where(t => t.DueDate.Date >= DateTime.Today.Date && t.IsCompleted == false)
+					.OrderBy(t => t.DueDate.Date)
+					.ThenByDescending(t => t.Priority)
+					.ToList(),
+
+				CompletedTasks = _context.Tasks
+					.Where(t => t.IsCompleted)
+					.OrderBy(t => t.DueDate)
+					.ToList(),
+
+				Categories = _context.Categories
+					.Where(c => c.UserId == userId)
+					.ToList()
 			};
 
 			return View(tasks);

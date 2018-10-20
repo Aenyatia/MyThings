@@ -12,7 +12,7 @@ namespace ToDoList.Persistence.Data.Migrations
                 name: "Notes");
 
             migrationBuilder.CreateTable(
-                name: "Tasks",
+                name: "ActiveTasks",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -32,7 +32,7 @@ namespace ToDoList.Persistence.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Tasks");
+                name: "ActiveTasks");
 
             migrationBuilder.CreateTable(
                 name: "Notes",

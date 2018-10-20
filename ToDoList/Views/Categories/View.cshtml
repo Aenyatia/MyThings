@@ -1,0 +1,15 @@
+﻿@model CategoryViewModel
+
+@{
+	ViewData["Title"] = "Edit Categories";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+
+<ul>
+	@foreach (var category in Model.Categories)
+	{
+		<li>@category.Name <a href="#">Delete</a></li>
+	}
+</ul>

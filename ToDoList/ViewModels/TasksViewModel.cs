@@ -5,7 +5,9 @@ namespace ToDoList.ViewModels
 {
 	public class TasksViewModel
 	{
-		public IEnumerable<Task> Tasks { get; set; }
-		public IEnumerable<Category> Categories { get; set; }
+		public IList<Task> ActiveTasks { get; set; }
+		public IList<Task> CompletedTasks { get; set; }
+		public int? CategoryId { get; set; }
+		public IList<Category> Categories { get; set; }
 	}
 }
