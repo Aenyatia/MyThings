@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ToDoList.Dtos
+namespace ToDoList.ViewModels.Tasks
 {
 	public class TaskViewModel
 	{

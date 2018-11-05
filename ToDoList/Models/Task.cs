@@ -1,4 +1,5 @@
 ﻿using System;
+using ToDoList.Extensions;
 
 namespace ToDoList.Models
 {
@@ -15,18 +16,6 @@ namespace ToDoList.Models
 		public bool IsCompleted { get; protected set; }
 		public DateTime? CompletedAt { get; protected set; }
 
-		public void Complete()
-		{
-			IsCompleted = true;
-			CompletedAt = DateTime.UtcNow;
-		}
-
-		public void Active()
-		{
-			IsCompleted = false;
-			CompletedAt = null;
-		}
-
 		protected Task(string userId, string name)
 		{
 			UserId = userId;
@@ -38,7 +27,24 @@ namespace ToDoList.Models
 		}
 
 		public static Task Create(string userId, string name)
-			=> new Task(userId, name);
+		{
+			if (userId.IsEmpty()) throw new ArgumentException();
+			if (name.IsEmpty()) throw new ArgumentException();
+
+			return new Task(userId, name);
+		}
+
+		public void Activate()
+		{
+			IsCompleted = false;
+			CompletedAt = null;
+		}
+
+		public void Deactivate()
+		{
+			IsCompleted = true;
+			CompletedAt = DateTime.UtcNow;
+		}
 
 		public void Edit(string name, Priority priority, DateTime dueDate, Category category)
 		{

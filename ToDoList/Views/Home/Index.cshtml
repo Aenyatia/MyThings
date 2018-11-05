@@ -1,4 +1,5 @@
-﻿@model TasksViewModel
+﻿@using ToDoList.Components
+@model SummaryViewModel
 
 @{
 	ViewData["Title"] = "Summary";
@@ -6,7 +7,11 @@
 
 <div class="row">
 	<!-- Tasks and categories -->
-	<partial model="@Model.TasksCategoriesViewModel" name="_TasksAndCategories" />
+	<div class="col-lg-2 p-lg-3">
+		@await Component.InvokeAsync(typeof(TasksViewComponent))
+		<br />
+		@await Component.InvokeAsync(typeof(CategoriesViewComponent))
+	</div>
 
 	<!-- Summary -->
 	<partial model="@Model" name="_Summary" />

@@ -5,6 +5,7 @@ using ToDoList.Dtos;
 using ToDoList.Persistence.Data;
 using ToDoList.Persistence.Extensions;
 using ToDoList.ViewModels;
+using ToDoList.ViewModels.Tasks;
 
 namespace ToDoList.Controllers
 {
@@ -58,7 +59,7 @@ namespace ToDoList.Controllers
 			if (task == null)
 				return BadRequest();
 
-			task.Complete();
+			task.Deactivate();
 			_context.SaveChanges();
 
 			return RedirectToAction("Index", "Home");
@@ -73,7 +74,7 @@ namespace ToDoList.Controllers
 			if (task == null)
 				return BadRequest();
 
-			task.Active();
+			task.Activate();
 			_context.SaveChanges();
 
 			return RedirectToAction("Index", "Home");

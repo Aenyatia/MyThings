@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToDoList.Dtos;
+using ToDoList.ViewModels.Tasks;
 
 namespace ToDoList.ViewModels
 {

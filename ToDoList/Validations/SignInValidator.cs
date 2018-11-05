@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using ToDoList.ViewModels;
+using ToDoList.ViewModels.Account;
 
 namespace ToDoList.Validations
 {

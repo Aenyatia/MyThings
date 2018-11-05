@@ -1,4 +1,7 @@
-﻿namespace ToDoList.Models
+﻿using System;
+using ToDoList.Extensions;
+
+namespace ToDoList.Models
 {
 	public class Category
 	{
@@ -14,6 +17,11 @@
 		}
 
 		public static Category Create(string userId, string name)
-			=> new Category(userId, name);
+		{
+			if (userId.IsEmpty()) throw new ArgumentException();
+			if (name.IsEmpty()) throw new ArgumentException();
+
+			return new Category(userId, name);
+		}
 	}
 }

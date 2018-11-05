@@ -1,4 +1,4 @@
-﻿namespace ToDoList.ViewModels
+﻿namespace ToDoList.ViewModels.Account
 {
 	public class SignUpViewModel
 	{

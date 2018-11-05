@@ -1,7 +1,7 @@
 ﻿using System;
 using ToDoList.Models;
 
-namespace ToDoList.ViewModels
+namespace ToDoList.ViewModels.Tasks
 {
 	public class EditTaskViewModel
 	{

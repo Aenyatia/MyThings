@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using ToDoList.Persistence.Identity;
 using ToDoList.ViewModels;
+using ToDoList.ViewModels.Account;
 
 namespace ToDoList.Controllers
 {

@@ -1,14 +1,14 @@
-﻿@model CategoryViewModel
+﻿@model IEnumerable<ToDoList.ViewModels.Categories.CategoryViewModel>
 
 @{
 	ViewData["Title"] = "Edit Categories";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2>@ViewBag.Title</h2>
 <hr />
 
 <ul>
-	@foreach (var category in Model.Categories)
+	@foreach (var category in Model)
 	{
 		<li>@category.Name <a href="#">Delete</a></li>
 	}
