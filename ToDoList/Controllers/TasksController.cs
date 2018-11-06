@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
-using ToDoList.Dtos;
 using ToDoList.Persistence.Data;
 using ToDoList.Persistence.Extensions;
+using ToDoList.Services;
 using ToDoList.ViewModels;
 using ToDoList.ViewModels.Tasks;
 
@@ -12,10 +12,12 @@ namespace ToDoList.Controllers
 	public class TasksController : Controller
 	{
 		private readonly ApplicationDbContext _context;
+		private readonly TaskService _taskService;
 
-		public TasksController(ApplicationDbContext context)
+		public TasksController(ApplicationDbContext context, TaskService taskService)
 		{
 			_context = context;
+			_taskService = taskService;
 		}
 
 		[HttpGet("{id}")]
@@ -28,10 +30,23 @@ namespace ToDoList.Controllers
 			return Ok(task);
 		}
 
-		[HttpGet]
-		public IActionResult Edit()
+		[HttpGet("{taskId}")]
+		public IActionResult Edit(int taskId)
 		{
-			return View("EditTask");
+			var userId = User.GetUserId();
+			var task = _context.Tasks.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
+			if (task == null)
+				throw new ArgumentException();
+
+			var viewModel = new EditTaskViewModel
+			{
+				Name = task.Name,
+				DueDate = task.DueDate,
+				Priority = task.Priority,
+				Category = task.Category
+			};
+
+			return View("EditTask", viewModel);
 		}
 
 		[HttpPost]
@@ -85,14 +100,80 @@ namespace ToDoList.Controllers
 			throw new System.NotImplementedException();
 		}
 
+		[HttpGet]
 		public IActionResult TodayTasks()
 		{
 			var userId = User.GetUserId();
-			var viewModel = new TodayTasksViewModel
+			var viewModel = new TasksViewModel
 			{
-				TodayTasks = _context.Tasks.Where(t => t.UserId == userId &&
-													   t.DueDate.Date == DateTime.Today.Date &&
-													   t.IsCompleted == false)
+				Tasks = _taskService.GetTodayTasks(userId),
+				TaskOption = "today"
+			};
+
+			return View("Tasks", viewModel);
+		}
+
+		[HttpGet]
+		public IActionResult TomorrowTasks()
+		{
+			var userId = User.GetUserId();
+			var viewModel = new TasksViewModel
+			{
+				Tasks = _taskService.GetTomorrowTasks(userId),
+				TaskOption = "tomorrow"
+			};
+
+			return View("Tasks", viewModel);
+		}
+
+		[HttpGet]
+		public IActionResult LaterTasks()
+		{
+			var userId = User.GetUserId();
+			var viewModel = new TasksViewModel
+			{
+				Tasks = _taskService.GetLaterTasks(userId),
+				TaskOption = "later"
+			};
+
+			return View("Tasks", viewModel);
+		}
+
+		[HttpGet]
+		public IActionResult NotDoneTasks()
+		{
+			var userId = User.GetUserId();
+			var viewModel = new TasksViewModel
+			{
+				Tasks = _taskService.GetNotDoneTasks(userId),
+				TaskOption = "notdone"
+			};
+
+			return View("Tasks", viewModel);
+		}
+
+		[HttpGet]
+		public IActionResult CompletedTasks()
+		{
+			var userId = User.GetUserId();
+			var viewModel = new TasksViewModel
+			{
+				Tasks = _taskService.GetCompletedTasks(userId),
+				TaskOption = "completed"
+			};
+
+			return View("Tasks", viewModel);
+		}
+
+		[HttpGet("{categoryId}")]
+		public IActionResult TaskWithCategory(int categoryId)
+		{
+			var userId = User.GetUserId();
+			var viewModel = new TasksViewModel
+			{
+				Tasks = _context.Tasks
+					.Where(t => t.Category.Id == categoryId &&
+								t.UserId == userId)
 					.OrderByDescending(t => t.Priority)
 					.Select(t => new TaskViewModel
 					{
@@ -100,27 +181,14 @@ namespace ToDoList.Controllers
 						Name = t.Name,
 						DueDate = t.DueDate.ToLongDateString(),
 						Priority = t.Priority.ToString(),
-						Category = t.Category.Name,
-					}),
+						Category = t.Category.Name
+					})
+					.ToList(),
 
-				TasksCategoriesViewModel = new TasksCategoriesViewModel
-				{
-					Categories = _context.Categories
-						.Where(c => c.UserId == userId)
-						.Select(t => t.Name),
-
-					TaskCounters = new TaskNumbersDto
-					{
-						TodayTasks = _context.Tasks.Count(t => t.DueDate.Date == DateTime.Today.Date && t.IsCompleted == false),
-						TomorrowTasks = _context.Tasks.Count(t => t.DueDate.Date == DateTime.Today.AddDays(1).Date && t.IsCompleted == false),
-						LaterTasks = _context.Tasks.Count(t => t.DueDate.Date > DateTime.Today.AddDays(1).Date && t.IsCompleted == false),
-						NotDoneTasks = _context.Tasks.Count(t => t.DueDate.Date < DateTime.Today.Date && t.IsCompleted == false),
-						HistoryTasks = _context.Tasks.Count(t => t.IsCompleted)
-					}
-				}
+				TaskOption = "category"
 			};
 
-			return View("TodayTasks", viewModel);
+			return View("Tasks", viewModel);
 		}
 	}
 }

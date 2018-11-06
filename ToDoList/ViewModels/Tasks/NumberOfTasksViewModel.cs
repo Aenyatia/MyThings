@@ -6,6 +6,6 @@
 		public int Tomorrow { get; set; }
 		public int Later { get; set; }
 		public int NotDone { get; set; }
-		public int History { get; set; }
+		public int Completed { get; set; }
 	}
 }

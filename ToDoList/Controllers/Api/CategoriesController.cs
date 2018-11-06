@@ -6,6 +6,7 @@ using ToDoList.Extensions;
 using ToDoList.Models;
 using ToDoList.Persistence.Data;
 using ToDoList.Persistence.Extensions;
+using ToDoList.ViewModels.Categories;
 
 namespace ToDoList.Controllers.Api
 {
@@ -22,7 +23,7 @@ namespace ToDoList.Controllers.Api
 		}
 
 		[HttpPost]
-		public IActionResult Post([FromBody]CategoryDto dto)
+		public IActionResult Post([FromBody]CreateCategoryViewModel dto)
 		{
 			if (dto.Name.IsEmpty())
 				return BadRequest();

@@ -8,6 +8,7 @@
 			<button class="btn btn-outline-secondary">Create task</button>
 		</div>
 	</form>
+	<br />
 
 	<h3>today</h3>
 	<ul class="list-group">
@@ -90,8 +91,7 @@
 				<li class="list-group-item list-group-item-action @task.PriorityClass()" data-task-id="@task.Id">
 					@task.Name
 					<div class="float-right actions">
-						<a asp-controller="Tasks" asp-action="Complete">Complete</a>
-						<a asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Edit</a>
+						<a asp-controller="Tasks" asp-action="Active">Undo</a>
 						<a asp-controller="Tasks" asp-action="Delete">Delete</a>
 					</div>
 				</li>

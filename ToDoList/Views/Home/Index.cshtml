@@ -1,16 +1,15 @@
-﻿@using ToDoList.Components
-@model SummaryViewModel
+﻿@model SummaryViewModel
 
 @{
 	ViewData["Title"] = "Summary";
 }
 
 <div class="row">
-	<!-- Tasks and categories -->
+	<!-- Tasks and categories navbar -->
 	<div class="col-lg-2 p-lg-3">
-		@await Component.InvokeAsync(typeof(TasksViewComponent))
+		@await Component.InvokeAsync(typeof(TaskViewComponent))
 		<br />
-		@await Component.InvokeAsync(typeof(CategoriesViewComponent))
+		@await Component.InvokeAsync(typeof(CategoryViewComponent))
 	</div>
 
 	<!-- Summary -->

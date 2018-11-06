@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using ToDoList.Persistence.Identity;
-using ToDoList.ViewModels;
 using ToDoList.ViewModels.Account;
 
 namespace ToDoList.Controllers
@@ -24,12 +23,12 @@ namespace ToDoList.Controllers
 
 		[HttpGet]
 		[AllowAnonymous]
-		public IActionResult Register() => View();
+		public IActionResult SignUp() => View();
 
 		[HttpPost]
 		[AllowAnonymous]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Register(SignUpViewModel viewModel)
+		public async Task<IActionResult> SignUp(SignUpViewModel viewModel)
 		{
 			if (!ModelState.IsValid)
 				return View(viewModel);
@@ -56,7 +55,7 @@ namespace ToDoList.Controllers
 		public IActionResult LogIn(string returnUrl)
 		{
 			ViewBag.ReturnUrl = returnUrl;
-			return View();
+			return View("SignIn");
 		}
 
 		[HttpPost]
@@ -65,7 +64,7 @@ namespace ToDoList.Controllers
 		public async Task<IActionResult> LogIn(SignInViewModel viewModel, string returnUrl)
 		{
 			if (!ModelState.IsValid)
-				return View(viewModel);
+				return View("SignIn", viewModel);
 
 			var user = await _userManager.FindByEmailAsync(viewModel.Email);
 			if (user != null)
@@ -78,12 +77,12 @@ namespace ToDoList.Controllers
 			}
 
 			ModelState.AddModelError(string.Empty, "Invalid email or password.");
-			return View(viewModel);
+			return View("SignIn", viewModel);
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> LogOut()
+		public async Task<IActionResult> SignOut()
 		{
 			await _signInManager.SignOutAsync();
 			return RedirectToAction("Index", "Home");

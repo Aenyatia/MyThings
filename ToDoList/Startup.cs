@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ToDoList.Persistence.Data;
 using ToDoList.Persistence.Identity;
+using ToDoList.Services;
 
 namespace ToDoList
 {
@@ -40,6 +41,9 @@ namespace ToDoList
 					options.User.RequireUniqueEmail = true)
 				.AddEntityFrameworkStores<IdentityDbContext>()
 				.AddDefaultTokenProviders();
+
+			services.AddScoped<TaskService>();
+			services.AddScoped<CategoryService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)

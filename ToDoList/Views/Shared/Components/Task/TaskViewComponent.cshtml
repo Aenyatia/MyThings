@@ -7,21 +7,21 @@
 			Today
 			<span class="badge badge-light badge-pill float-right">@Model.Today</span>
 		</a>
-		<a href="#" class="btn btn-secondary btn-block">
+		<a asp-controller="Tasks" asp-action="TomorrowTasks" class="btn btn-secondary btn-block">
 			Tomorrow
 			<span class="badge badge-light badge-pill float-right">@Model.Tomorrow</span>
 		</a>
-		<a href="#" class="btn btn-secondary btn-block">
+		<a asp-controller="Tasks" asp-action="LaterTasks" class="btn btn-secondary btn-block">
 			Later
 			<span class="badge badge-light badge-pill float-right">@Model.Later</span>
 		</a>
-		<a href="#" class="btn btn-secondary btn-block">
+		<a asp-controller="Tasks" asp-action="NotDoneTasks" class="btn btn-secondary btn-block">
 			Not done
 			<span class="badge badge-light badge-pill float-right">@Model.NotDone</span>
 		</a>
-		<a href="#" class="btn btn-secondary btn-block">
+		<a asp-controller="Tasks" asp-action="CompletedTasks" class="btn btn-secondary btn-block">
 			History
-			<span class="badge badge-light badge-pill float-right">@Model.History</span>
+			<span class="badge badge-light badge-pill float-right">@Model.Completed</span>
 		</a>
 	</div>
 </div>
