@@ -25,79 +25,54 @@
 	<script>
 		$(document).ready(function () {
 
-			// display details
-			$("#activeItems li").on("click",
-				function (e) {
-					e.preventDefault();
+			//// display details
+			//$("#activeItems li").on("click",
+			//	function (e) {
+			//		e.preventDefault();
 
-					const detailsTab = $("#detailsTab");
-					const itemId = $(e.target).data("task-id");
+			//		const detailsTab = $("#detailsTab");
+			//		const itemId = $(e.target).data("task-id");
 
-					detailsTab.children().remove();
+			//		detailsTab.children().remove();
 
-					$.ajax({
-						url: `api/tasks/${itemId}`,
-						method: "GET",
-					}).done(function (data) {
-						const header = $("<h3></h3>").append("Details");
-						const itemInfo = $("<ul></ul>", { class: "list-group" });
+			//		$.ajax({
+			//			url: `api/tasks/${itemId}`,
+			//			method: "GET",
+			//		}).done(function (data) {
+			//			const header = $("<h3></h3>").append("Details");
+			//			const itemInfo = $("<ul></ul>", { class: "list-group" });
 
-						itemInfo.append($("<li></li>", { class: "list-group-item" })
-							.append(`Due data: ${data.dueDate || "-"}`));
-						itemInfo.append($("<li></li>", { class: "list-group-item" })
-							.append(`Priority: ${data.priority || "-"}`));
-						itemInfo.append($("<li></li>", { class: "list-group-item" })
-							.append(`Category: ${data.category || "-"}`));
+			//			itemInfo.append($("<li></li>", { class: "list-group-item" })
+			//				.append(`Due data: ${data.dueDate || "-"}`));
+			//			itemInfo.append($("<li></li>", { class: "list-group-item" })
+			//				.append(`Priority: ${data.priority || "-"}`));
+			//			itemInfo.append($("<li></li>", { class: "list-group-item" })
+			//				.append(`Category: ${data.category || "-"}`));
 
-						detailsTab.append(header).append(itemInfo);
-					}).fail(function () {
-						alert("Something failed.");
-					});
-				});
+			//			detailsTab.append(header).append(itemInfo);
+			//		}).fail(function () {
+			//			alert("Something failed.");
+			//		});
+			//	});
 
-			// add category
-			$("#categoryForm").on("submit",
-				function (e) {
-					e.preventDefault();
+			//// add task
+			//$("#taskForm").on("submit",
+			//	function () {
+			//		const taskName = $("#taskName").val();
 
-					const categoryName = $("#categoryName").val();
-
-					$.ajax({
-						url: "/api/categories",
-						method: "POST",
-						contentType: "application/json",
-						data: JSON.stringify({
-							"name": categoryName
-						})
-					}).done(function () {
-						const link = $("<a></a>", { href: "#", class: "btn btn-outline-secondary btn-block" });
-
-						link.append(categoryName);
-
-						$("#categoriesList").append(link);
-					}).fail(function () {
-						alert("Something failed.");
-					});
-				});
-
-			// add task
-			$("#taskForm").on("submit",
-				function () {
-					const taskName = $("#taskName").val();
-
-					$.ajax({
-						url: "/api/tasks",
-						method: "POST",
-						contentType: "application/json",
-						data: JSON.stringify({
-							"name": taskName
-						})
-					}).done(function () {
-						refresh();
-					}).fail(function () {
-						alert("Something failed.");
-					});
-				});
+			//		$.ajax({
+			//			url: "/api/tasks",
+			//			method: "POST",
+			//			contentType: "application/json",
+			//			data: JSON.stringify({
+			//				"name": taskName
+			//			})
+			//		}).done(function () {
+			//			refresh();
+			//		}).fail(function () {
+			//			alert("Something failed.");
+			//		});
+			//	});
 
 			const setNumberOfItems = function () {
 				$.ajax({

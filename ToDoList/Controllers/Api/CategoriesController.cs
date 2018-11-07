@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using ToDoList.Dtos;
-using ToDoList.Extensions;
 using ToDoList.Models;
 using ToDoList.Persistence.Data;
 using ToDoList.Persistence.Extensions;
-using ToDoList.ViewModels.Categories;
 
 namespace ToDoList.Controllers.Api
 {
@@ -23,11 +21,8 @@ namespace ToDoList.Controllers.Api
 		}
 
 		[HttpPost]
-		public IActionResult Post([FromBody]CreateCategoryViewModel dto)
+		public IActionResult Post([FromBody]CreateCategoryDto dto)
 		{
-			if (dto.Name.IsEmpty())
-				return BadRequest();
-
 			var userId = User.GetUserId();
 			var category = Category.Create(userId, dto.Name);
 
@@ -37,13 +32,13 @@ namespace ToDoList.Controllers.Api
 			return Created(string.Empty, null);
 		}
 
-		[HttpPost("{id}")]
-		public IActionResult Delete(int id)
+		[HttpDelete("{categoryId}")]
+		public IActionResult Delete(int categoryId)
 		{
 			var userId = User.GetUserId();
-			var category = _context.Categories.SingleOrDefault(c => c.UserId == userId && c.Id == id);
+			var category = _context.Categories.SingleOrDefault(c => c.Id == categoryId && c.UserId == userId);
 			if (category == null)
-				return BadRequest();
+				return NoContent();
 
 			_context.Categories.Remove(category);
 			_context.SaveChanges();

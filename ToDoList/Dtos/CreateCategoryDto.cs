@@ -1,6 +1,6 @@
 ﻿namespace ToDoList.Dtos
 {
-	public class CategoryDto
+	public class CreateCategoryDto
 	{
 		public string Name { get; set; }
 	}

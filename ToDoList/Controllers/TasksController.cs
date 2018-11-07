@@ -95,11 +95,6 @@ namespace ToDoList.Controllers
 			return RedirectToAction("Index", "Home");
 		}
 
-		public IActionResult Delete()
-		{
-			throw new System.NotImplementedException();
-		}
-
 		[HttpGet]
 		public IActionResult TodayTasks()
 		{

@@ -1,4 +1,4 @@
-﻿@model ToDoList.ViewModels.Tasks.NumberOfTasksViewModel
+﻿@model NumberOfTasksViewModel
 
 <div>
 	<h2>Tasks</h2>
@@ -20,7 +20,7 @@
 			<span class="badge badge-light badge-pill float-right">@Model.NotDone</span>
 		</a>
 		<a asp-controller="Tasks" asp-action="CompletedTasks" class="btn btn-secondary btn-block">
-			History
+			Completed
 			<span class="badge badge-light badge-pill float-right">@Model.Completed</span>
 		</a>
 	</div>
