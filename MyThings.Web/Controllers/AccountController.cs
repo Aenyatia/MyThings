@@ -73,7 +73,7 @@ namespace MyThings.Web.Controllers
 
 				var result = await _signInManager.PasswordSignInAsync(user, command.Password, command.RememberMe, false);
 				if (result.Succeeded)
-					return Redirect(returnUrl ?? "/");
+					return Redirect(returnUrl ?? "/Tasks/Summary");
 			}
 
 			ModelState.AddModelError(string.Empty, "Invalid email or password.");

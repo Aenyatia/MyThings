@@ -28,7 +28,7 @@ namespace MyThings.Web.Controllers
 
 			_categoryService.CreateCategory(User.GetUserId(), command.Name);
 
-			return RedirectToAction("", "");
+			return RedirectToAction("Summary", "Tasks");
 		}
 
 		[HttpDelete]
@@ -36,7 +36,15 @@ namespace MyThings.Web.Controllers
 		{
 			_categoryService.DeleteCategory(User.GetUserId(), categoryId);
 
-			return RedirectToAction("", "");
+			return RedirectToAction("ManageCategories", "Categories");
+		}
+
+		[HttpGet]
+		public IActionResult ManageCategories()
+		{
+			var categories = _categoryService.GetUserCategories(User.GetUserId());
+
+			return View(categories);
 		}
 	}
 }

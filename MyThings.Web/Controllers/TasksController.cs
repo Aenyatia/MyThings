@@ -3,6 +3,7 @@ using MyThings.Application.Services;
 using MyThings.Application.Specifications;
 using MyThings.Infrastructure.Extensions;
 using MyThings.Web.Commands;
+using MyThings.Web.ViewModels;
 
 namespace MyThings.Web.Controllers
 {
@@ -27,7 +28,7 @@ namespace MyThings.Web.Controllers
 
 			_taskService.CreateTask(User.GetUserId(), command.Name);
 
-			return RedirectToAction("", "");
+			return RedirectToAction("Summary", "Tasks");
 		}
 
 		[HttpDelete]
@@ -35,7 +36,7 @@ namespace MyThings.Web.Controllers
 		{
 			_taskService.RemoveTask(User.GetUserId(), taskId);
 
-			return RedirectToAction("", "");
+			return RedirectToAction("Summary", "Tasks");
 		}
 
 		[HttpPost]
@@ -43,7 +44,7 @@ namespace MyThings.Web.Controllers
 		{
 			_taskService.DeactivateTask(User.GetUserId(), taskId);
 
-			return RedirectToAction("", "");
+			return RedirectToAction("Summary", "Tasks");
 		}
 
 		[HttpPost]
@@ -51,7 +52,7 @@ namespace MyThings.Web.Controllers
 		{
 			_taskService.ActivateTask(User.GetUserId(), taskId);
 
-			return RedirectToAction("", "");
+			return RedirectToAction("Summary", "Tasks");
 		}
 
 		[HttpGet]
@@ -95,6 +96,29 @@ namespace MyThings.Web.Controllers
 		{
 			var userId = User.GetUserId();
 			var tasks = _taskService.GetTasks(new CompletedTasksSpecification(userId), null);
+
+			return View("Tasks", tasks);
+		}
+
+		[HttpGet]
+		public IActionResult Summary()
+		{
+			var userId = User.GetUserId();
+			var viewModel = new SummaryViewModel
+			{
+				TodayTasks = _taskService.GetTasks(new TodayTasksSpecification(userId), 5),
+				TomorrowTasks = _taskService.GetTasks(new TomorrowTasksSpecification(userId), 5),
+				LaterTasks = _taskService.GetTasks(new LaterTasksSpecification(userId), 5),
+				RecentlyCompletedTasks = _taskService.GetTasks(new CompletedTasksSpecification(userId), 5)
+			};
+
+			return View(viewModel);
+		}
+
+		[HttpGet]
+		public IActionResult GetTasksByCategory(int categoryId)
+		{
+			var tasks = _taskService.GetTasksByCategory(User.GetUserId(), categoryId);
 
 			return View("Tasks", tasks);
 		}

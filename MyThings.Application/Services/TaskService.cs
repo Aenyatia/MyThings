@@ -68,6 +68,15 @@ namespace MyThings.Application.Services
 			return _mapper.Map<IEnumerable<Task>, IEnumerable<TaskDto>>(tasks);
 		}
 
+		public IEnumerable<TaskDto> GetTasksByCategory(string userId, int categoryId)
+		{
+			var tasks = _context.Tasks
+				.Where(t => t.Category.Id == categoryId && t.UserId == userId)
+				.ToList();
+
+			return _mapper.Map<IEnumerable<Task>, IEnumerable<TaskDto>>(tasks);
+		}
+
 		public TasksNumbersDto GetTasksNumbers(string userId)
 		{
 			return new TasksNumbersDto

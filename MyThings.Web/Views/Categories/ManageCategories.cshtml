@@ -1,0 +1,27 @@
+﻿@model IEnumerable<CategoryDto>
+
+@{
+	ViewData["Title"] = "Manage Categories";
+}
+
+<div class="container">
+	<h2>@ViewBag.Title</h2>
+	<hr />
+
+	<ul class="list-group">
+		@if (Model.Any())
+		{
+			foreach (var category in Model)
+			{
+				<li class="list-group-item">
+					@category.Name
+					<button class="btn btn-danger float-right">Delete</button>
+				</li>
+			}
+		}
+		else
+		{
+			<li class="list-group-item disabled">No categories.</li>
+		}
+	</ul>
+</div>

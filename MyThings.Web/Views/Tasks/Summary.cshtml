@@ -1,0 +1,93 @@
+﻿@model SummaryViewModel
+
+@{
+	ViewData["Title"] = "Summary";
+}
+
+<div class="row">
+	<div class="col-lg-2 p-lg-3">
+		@await Component.InvokeAsync(typeof(TaskViewComponent))
+		<br />
+		@await Component.InvokeAsync(typeof(CategoryViewComponent))
+	</div>
+
+	<div class="col-lg-8 p-lg-3">
+		<h2>Summary</h2>
+		<br />
+
+		<h3>today</h3>
+		<ul class="list-group">
+			@if (Model.TodayTasks.Any())
+			{
+				foreach (var task in Model.TodayTasks)
+				{
+					<li class="list-group-item list-group-item-action" data-task-id="@task.Id">
+						@task.Name
+					</li>
+				}
+			}
+			else
+			{
+				<li class="list-group-item disabled">No tasks.</li>
+			}
+		</ul>
+		<br />
+
+		<h3>tomorrow</h3>
+		<ul class="list-group">
+			@if (Model.TomorrowTasks.Any())
+			{
+				foreach (var task in Model.TomorrowTasks)
+				{
+					<li class="list-group-item list-group-item-action" data-task-id="@task.Id">
+						@task.Name
+					</li>
+				}
+			}
+			else
+			{
+				<li class="list-group-item disabled">No tasks.</li>
+			}
+		</ul>
+		<br />
+
+		<h3>later</h3>
+		<ul class="list-group">
+			@if (Model.LaterTasks.Any())
+			{
+				foreach (var task in Model.LaterTasks)
+				{
+					<li class="list-group-item list-group-item-action" data-task-id="@task.Id">
+						@task.Name
+					</li>
+				}
+			}
+			else
+			{
+				<li class="list-group-item disabled">No tasks.</li>
+			}
+		</ul>
+		<br />
+
+		<h3>recently completed</h3>
+		<ul class="list-group">
+			@if (Model.RecentlyCompletedTasks.Any())
+			{
+				foreach (var task in Model.RecentlyCompletedTasks)
+				{
+					<li class="list-group-item list-group-item-action" data-task-id="@task.Id">
+						@task.Name
+					</li>
+				}
+			}
+			else
+			{
+				<li class="list-group-item disabled">No tasks.</li>
+			}
+		</ul>
+	</div>
+
+	<div class="col-lg-2 p-lg-3">
+
+	</div>
+</div>
