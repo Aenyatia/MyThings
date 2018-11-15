@@ -1,0 +1,23 @@
+﻿@using MyThings.Web.Components
+@model SummaryViewModel
+
+@{
+	ViewData["Title"] = "Summary";
+}
+
+<div class="row">
+	<!-- Tasks and categories navbar -->
+	<div class="col-lg-2 p-lg-3">
+		@await Component.InvokeAsync(typeof(TaskViewComponent))
+		<br />
+		@await Component.InvokeAsync(typeof(CategoryViewComponent))
+	</div>
+
+	<!-- Summary -->
+	<partial model="@Model" name="_Summary" />
+
+	<!-- Details -->
+	<div class="col-lg-2 p-lg-3">
+		<div id="detailsTab"></div>
+	</div>
+</div>

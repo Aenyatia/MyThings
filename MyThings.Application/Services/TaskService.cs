@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MyThings.Application.Specifications;
+using MyThings.Application.ViewModels.Tasks;
 using MyThings.Core.Domain;
 using MyThings.Infrastructure.Data;
 

@@ -1,0 +1,40 @@
+﻿@using MyThings.Web.Components
+@model TasksViewModel
+
+<div class="row">
+	<!-- Tasks and categories navbar -->
+	<div class="col-lg-2 p-lg-3">
+		@await Component.InvokeAsync(typeof(TaskViewComponent))
+		<br />
+		@await Component.InvokeAsync(typeof(CategoryViewComponent))
+	</div>
+
+	<!-- Tasks -->
+	<div class="col-lg-8 p-lg-3">
+		<h3>@Model.TaskOption</h3>
+		<ul class="list-group">
+			@if (Model.Tasks.Any())
+			{
+				foreach (var task in Model.Tasks)
+				{
+					<li class="list-group-item list-group-item-action @task.PriorityClass()" data-task-id="@task.Id">
+						@task.Name
+						<div class="float-right actions">
+							<a asp-controller="Tasks" asp-action="Complete">Complete</a>
+							<a asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Edit</a>
+						</div>
+					</li>
+				}
+			}
+			else
+			{
+				<li class="list-group-item disabled">No tasks.</li>
+			}
+		</ul>
+	</div>
+
+	<!-- Details -->
+	<div class="col-lg-2 p-lg-3">
+		<div id="detailsTab"></div>
+	</div>
+</div>
