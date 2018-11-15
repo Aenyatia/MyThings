@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToDoList.Persistence.Extensions;
-using ToDoList.Services;
+using MyThings.Application.Services;
+using MyThings.Infrastructure.Extensions;
 
 namespace ToDoList.Components
 {

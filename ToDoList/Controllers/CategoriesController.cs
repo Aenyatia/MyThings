@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Persistence.Extensions;
-using ToDoList.Services;
+using MyThings.Application.Services;
+using MyThings.Application.ViewModels.Categories;
+using MyThings.Infrastructure.Extensions;
+using ToDoList.Commands;
 
 namespace ToDoList.Controllers
 {
@@ -13,6 +15,18 @@ namespace ToDoList.Controllers
 		public CategoriesController(CategoryService categoryService)
 		{
 			_categoryService = categoryService;
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult CreateCategory(CreateCategoryCommand command)
+		{
+			if (!ModelState.IsValid)
+				return RedirectToAction("Index", "Home");
+
+			_categoryService.CreateCategory(User.GetUserId(), command.Name);
+
+			return Created(string.Empty, null);
 		}
 
 		[HttpGet]

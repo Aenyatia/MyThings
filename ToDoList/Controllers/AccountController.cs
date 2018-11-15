@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MyThings.Infrastructure.Identity;
 using System.Threading.Tasks;
-using ToDoList.Persistence.Identity;
-using ToDoList.ViewModels.Account;
+using ToDoList.Commands;
 
 namespace ToDoList.Controllers
 {

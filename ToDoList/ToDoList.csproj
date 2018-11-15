@@ -15,4 +15,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MyThings.Application\MyThings.Application.csproj" />
+    <ProjectReference Include="..\MyThings.Infrastructure\MyThings.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

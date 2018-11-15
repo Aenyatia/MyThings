@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToDoList.Persistence.Extensions;
-using ToDoList.Services;
-using ToDoList.ViewModels;
+using MyThings.Application.Services;
+using MyThings.Application.ViewModels;
+using MyThings.Infrastructure.Extensions;
 
 namespace ToDoList.Controllers
 {

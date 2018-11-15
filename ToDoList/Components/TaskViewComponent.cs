@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyThings.Application.Specifications;
+using MyThings.Application.ViewModels;
+using MyThings.Infrastructure.Data;
+using MyThings.Infrastructure.Extensions;
 using System.Linq;
-using ToDoList.Persistence.Data;
-using ToDoList.Persistence.Extensions;
-using ToDoList.Specifications;
-using ToDoList.ViewModels.Tasks;
 
 namespace ToDoList.Components
 {
@@ -19,7 +19,7 @@ namespace ToDoList.Components
 		public IViewComponentResult Invoke()
 		{
 			var userId = HttpContext.User.GetUserId();
-			return View("TaskViewComponent", new NumberOfTasksViewModel
+			return View("TaskViewComponent", new TaskNumberViewModel
 			{
 				Today = _context.Tasks.Count(new TodayTasksSpecification(userId).IsSatisfiedBy),
 				Tomorrow = _context.Tasks.Count(new TomorrowTasksSpecification(userId).IsSatisfiedBy),

@@ -1,38 +1,44 @@
-﻿//using System.Collections.Generic;
-//using System.Linq;
-//using MyThings.Core.Domain;
-//using MyThings.Infrastructure.Data;
-//using ToDoList.Models;
-//using ToDoList.Persistence.Data;
-//using ToDoList.ViewModels.Categories;
+﻿using MyThings.Application.ViewModels.Categories;
+using MyThings.Core.Domain;
+using MyThings.Infrastructure.Data;
+using System.Collections.Generic;
+using System.Linq;
 
-//namespace ToDoList.Services
-//{
-//	public class CategoryService
-//	{
-//		private readonly ApplicationDbContext _context;
+namespace MyThings.Application.Services
+{
+	public class CategoryService
+	{
+		private readonly ApplicationDbContext _context;
 
-//		public CategoryService(ApplicationDbContext context)
-//		{
-//			_context = context;
-//		}
+		public CategoryService(ApplicationDbContext context)
+		{
+			_context = context;
+		}
 
-//		public IEnumerable<CategoryViewModel> GetUserCategories(string userId)
-//		{
-//			var categories = _context.Categories.Where(c => c.UserId == userId);
+		public void CreateCategory(string userId, string name)
+		{
+			var category = Category.Create(userId, name);
 
-//			return CreateCategoryViewModel(categories);
-//		}
+			_context.Categories.Add(category);
+			_context.SaveChanges();
+		}
 
-//		private static IEnumerable<CategoryViewModel> CreateCategoryViewModel(IQueryable<Category> categories)
-//		{
-//			return categories
-//				.Select(c => new CategoryViewModel
-//				{
-//					Id = c.Id,
-//					Name = c.Name
-//				})
-//				.ToList();
-//		}
-//	}
-//}
+		public IEnumerable<CategoryViewModel> GetUserCategories(string userId)
+		{
+			var categories = _context.Categories.Where(c => c.UserId == userId);
+
+			return CreateCategoryViewModel(categories);
+		}
+
+		private static IEnumerable<CategoryViewModel> CreateCategoryViewModel(IQueryable<Category> categories)
+		{
+			return categories
+				.Select(c => new CategoryViewModel
+				{
+					Id = c.Id,
+					Name = c.Name
+				})
+				.ToList();
+		}
+	}
+}

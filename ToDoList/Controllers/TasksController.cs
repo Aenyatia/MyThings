@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyThings.Application.Services;
+using MyThings.Infrastructure.Data;
+using MyThings.Infrastructure.Extensions;
 using System;
 using System.Linq;
-using ToDoList.Persistence.Data;
-using ToDoList.Persistence.Extensions;
-using ToDoList.Services;
-using ToDoList.ViewModels;
-using ToDoList.ViewModels.Tasks;
+using MyThings.Application.ViewModels;
+using MyThings.Application.ViewModels.Tasks;
 
 namespace ToDoList.Controllers
 {
