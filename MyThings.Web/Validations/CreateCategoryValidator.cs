@@ -7,6 +7,7 @@ namespace MyThings.Web.Validations
 	{
 		public CreateCategoryValidator()
 		{
+			RuleFor(x => x.Name).NotEmpty();
 		}
 	}
 }

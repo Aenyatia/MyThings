@@ -1,16 +1,38 @@
 ﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-	<a class="navbar-brand" asp-controller="Home" asp-action="Index">My Things </a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+	@if (User.Identity.IsAuthenticated)
+	{
+		<a href="#" class="navbar-brand">My Things </a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
-	<div class="collapse navbar-collapse" id="navbarContent">
-		<ul class="navbar-nav mr-auto">
-			<li class="nav-item active">
-				<a class="nav-link" asp-controller="Categories" asp-action="ManageCategories">Manage Categories</a>
-			</li>
-		</ul>
+		<div class="collapse navbar-collapse" id="navbarContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a asp-controller="Tasks" asp-action="CreateTask" class="nav-link">Create Task</a>
+				</li>
+				<li class="nav-item active">
+					<a asp-controller="Categories" asp-action="CreateCategory" class="nav-link">Create Category</a>
+				</li>
+				<li class="nav-item active">
+					<a href="#" class="nav-link">Manage Categories</a>
+				</li>
+			</ul>
 
-		<partial name="_LoginPartial" />
-	</div>
+			<partial name="_LoginPartial" />
+		</div>
+	}
+	else
+	{
+		<a asp-controller="Home" asp-action="Index" class="navbar-brand">My Things </a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarContent">
+			<ul class="navbar-nav mr-auto"></ul>
+
+			<partial name="_LoginPartial" />
+		</div>
+	}
 </nav>

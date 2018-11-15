@@ -1,6 +1,6 @@
-﻿namespace MyThings.Application.ViewModels
+﻿namespace MyThings.Application.Dtos
 {
-	public class TaskNumberViewModel
+	public class TasksNumbersDto
 	{
 		public int Today { get; set; }
 		public int Tomorrow { get; set; }

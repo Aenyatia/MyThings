@@ -1,15 +1,7 @@
-﻿@model IEnumerable<MyThings.Application.ViewModels.Categories.CategoryViewModel>
+﻿@model IEnumerable<CategoryDto>
 
 <div>
 	<h3>Categories</h3>
-
-	<form method="post" class="input-group mb-2">
-		<input class="form-control" type="text" placeholder="Create category">
-		<div class="input-group-append">
-			<button class="btn btn-outline-secondary" type="submit">Create</button>
-		</div>
-	</form>
-
 	<div>
 		@foreach (var category in Model)
 		{

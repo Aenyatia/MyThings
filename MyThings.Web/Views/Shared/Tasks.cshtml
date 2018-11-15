@@ -1,5 +1,4 @@
-﻿@using MyThings.Web.Components
-@model TasksViewModel
+﻿@model IEnumerable<TaskDto>
 
 <div class="row">
 	<!-- Tasks and categories navbar -->
@@ -11,18 +10,14 @@
 
 	<!-- Tasks -->
 	<div class="col-lg-8 p-lg-3">
-		<h3>@Model.TaskOption</h3>
+		@*<h3>@Model.TaskOption</h3>*@
 		<ul class="list-group">
-			@if (Model.Tasks.Any())
+			@if (Model.Any())
 			{
-				foreach (var task in Model.Tasks)
+				foreach (var task in Model)
 				{
-					<li class="list-group-item list-group-item-action @task.PriorityClass()" data-task-id="@task.Id">
+					<li class="list-group-item list-group-item-action @*@task.PriorityClass()*@" data-task-id="@task.Id">
 						@task.Name
-						<div class="float-right actions">
-							<a asp-controller="Tasks" asp-action="Complete">Complete</a>
-							<a asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Edit</a>
-						</div>
 					</li>
 				}
 			}

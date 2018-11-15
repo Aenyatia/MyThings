@@ -16,16 +16,27 @@ namespace MyThings.Web.Controllers
 			_categoryService = categoryService;
 		}
 
+		[HttpGet]
+		public IActionResult CreateCategory() => View();
+
 		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[AutoValidateAntiforgeryToken]
 		public IActionResult CreateCategory(CreateCategoryCommand command)
 		{
 			if (!ModelState.IsValid)
-				return RedirectToAction("Index", "Home");
+				return View(command);
 
 			_categoryService.CreateCategory(User.GetUserId(), command.Name);
 
-			return Created(string.Empty, null);
+			return RedirectToAction("", "");
+		}
+
+		[HttpDelete]
+		public IActionResult DeleteCategory(int categoryId)
+		{
+			_categoryService.DeleteCategory(User.GetUserId(), categoryId);
+
+			return RedirectToAction("", "");
 		}
 	}
 }

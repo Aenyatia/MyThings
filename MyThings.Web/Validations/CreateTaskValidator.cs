@@ -7,6 +7,7 @@ namespace MyThings.Web.Validations
 	{
 		public CreateTaskValidator()
 		{
+			RuleFor(x => x.Name).NotEmpty();
 		}
 	}
 }

@@ -1,189 +1,102 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyThings.Application.Services;
-using MyThings.Application.ViewModels;
-using MyThings.Application.ViewModels.Tasks;
-using MyThings.Infrastructure.Data;
+using MyThings.Application.Specifications;
 using MyThings.Infrastructure.Extensions;
+using MyThings.Web.Commands;
 
 namespace MyThings.Web.Controllers
 {
 	public class TasksController : Controller
 	{
-		private readonly ApplicationDbContext _context;
 		private readonly TaskService _taskService;
 
-		public TasksController(ApplicationDbContext context, TaskService taskService)
+		public TasksController(TaskService taskService)
 		{
-			_context = context;
 			_taskService = taskService;
 		}
 
-		[HttpGet("{id}")]
-		public IActionResult Get(int id)
-		{
-			var task = _context.Tasks.SingleOrDefault(t => t.Id == id);
-			if (task == null)
-				return NotFound();
-
-			return Ok(task);
-		}
-
-		[HttpGet("{taskId}")]
-		public IActionResult Edit(int taskId)
-		{
-			var userId = User.GetUserId();
-			var task = _context.Tasks.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
-			if (task == null)
-				throw new ArgumentException();
-
-			var viewModel = new EditTaskViewModel
-			{
-				Name = task.Name,
-				DueDate = task.DueDate,
-				Priority = task.Priority,
-				Category = task.Category
-			};
-
-			return View("EditTask", viewModel);
-		}
+		[HttpGet]
+		public IActionResult CreateTask() => View();
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit(int taskId, [FromBody]EditTaskViewModel viewModel)
+		public IActionResult CreateTask(CreateTaskCommand command)
 		{
-			var userId = User.GetUserId();
-			var task = _context.Tasks.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
+			if (!ModelState.IsValid)
+				return View(command);
 
-			if (task == null)
-				return BadRequest();
+			_taskService.CreateTask(User.GetUserId(), command.Name);
 
-			task.Edit(viewModel.Name, viewModel.Priority, viewModel.DueDate, viewModel.Category);
-			_context.SaveChanges();
+			return RedirectToAction("", "");
+		}
 
-			return RedirectToAction("Index", "Home");
+		[HttpDelete]
+		public IActionResult DeleteTask(int taskId)
+		{
+			_taskService.RemoveTask(User.GetUserId(), taskId);
+
+			return RedirectToAction("", "");
 		}
 
 		[HttpPost]
 		public IActionResult Complete(int taskId)
 		{
-			var userId = User.GetUserId();
-			var task = _context.Tasks.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
+			_taskService.DeactivateTask(User.GetUserId(), taskId);
 
-			if (task == null)
-				return BadRequest();
-
-			task.Deactivate();
-			_context.SaveChanges();
-
-			return RedirectToAction("Index", "Home");
+			return RedirectToAction("", "");
 		}
 
 		[HttpPost]
 		public IActionResult Active(int taskId)
 		{
-			var userId = User.GetUserId();
-			var task = _context.Tasks.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
+			_taskService.ActivateTask(User.GetUserId(), taskId);
 
-			if (task == null)
-				return BadRequest();
-
-			task.Activate();
-			_context.SaveChanges();
-
-			return RedirectToAction("Index", "Home");
+			return RedirectToAction("", "");
 		}
 
 		[HttpGet]
 		public IActionResult TodayTasks()
 		{
 			var userId = User.GetUserId();
-			var viewModel = new TasksViewModel
-			{
-				Tasks = _taskService.GetTodayTasks(userId),
-				TaskOption = "today"
-			};
+			var tasks = _taskService.GetTasks(new TodayTasksSpecification(userId), null);
 
-			return View("Tasks", viewModel);
+			return View("Tasks", tasks);
 		}
 
 		[HttpGet]
 		public IActionResult TomorrowTasks()
 		{
 			var userId = User.GetUserId();
-			var viewModel = new TasksViewModel
-			{
-				Tasks = _taskService.GetTomorrowTasks(userId),
-				TaskOption = "tomorrow"
-			};
+			var tasks = _taskService.GetTasks(new TomorrowTasksSpecification(userId), null);
 
-			return View("Tasks", viewModel);
+			return View("Tasks", tasks);
 		}
 
 		[HttpGet]
 		public IActionResult LaterTasks()
 		{
 			var userId = User.GetUserId();
-			var viewModel = new TasksViewModel
-			{
-				Tasks = _taskService.GetLaterTasks(userId),
-				TaskOption = "later"
-			};
+			var tasks = _taskService.GetTasks(new LaterTasksSpecification(userId), null);
 
-			return View("Tasks", viewModel);
+			return View("Tasks", tasks);
 		}
 
 		[HttpGet]
 		public IActionResult NotDoneTasks()
 		{
 			var userId = User.GetUserId();
-			var viewModel = new TasksViewModel
-			{
-				Tasks = _taskService.GetNotDoneTasks(userId),
-				TaskOption = "notdone"
-			};
+			var tasks = _taskService.GetTasks(new NotDoneTasksSpecification(userId), null);
 
-			return View("Tasks", viewModel);
+			return View("Tasks", tasks);
 		}
 
 		[HttpGet]
 		public IActionResult CompletedTasks()
 		{
 			var userId = User.GetUserId();
-			var viewModel = new TasksViewModel
-			{
-				Tasks = _taskService.GetCompletedTasks(userId),
-				TaskOption = "completed"
-			};
+			var tasks = _taskService.GetTasks(new CompletedTasksSpecification(userId), null);
 
-			return View("Tasks", viewModel);
-		}
-
-		[HttpGet("{categoryId}")]
-		public IActionResult TaskWithCategory(int categoryId)
-		{
-			var userId = User.GetUserId();
-			var viewModel = new TasksViewModel
-			{
-				Tasks = _context.Tasks
-					.Where(t => t.Category.Id == categoryId &&
-								t.UserId == userId)
-					.OrderByDescending(t => t.Priority)
-					.Select(t => new TaskViewModel
-					{
-						Id = t.Id,
-						Name = t.Name,
-						DueDate = t.DueDate.ToLongDateString(),
-						Priority = t.Priority.ToString(),
-						Category = t.Category.Name
-					})
-					.ToList(),
-
-				TaskOption = "category"
-			};
-
-			return View("Tasks", viewModel);
+			return View("Tasks", tasks);
 		}
 	}
 }

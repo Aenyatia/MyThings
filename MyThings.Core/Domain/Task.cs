@@ -1,5 +1,4 @@
 ﻿using System;
-using MyThings.Core.Extensions;
 
 namespace MyThings.Core.Domain
 {
@@ -27,12 +26,7 @@ namespace MyThings.Core.Domain
 		}
 
 		public static Task Create(string userId, string name)
-		{
-			if (userId.IsEmpty()) throw new ArgumentException();
-			if (name.IsEmpty()) throw new ArgumentException();
-
-			return new Task(userId, name);
-		}
+			=> new Task(userId, name);
 
 		public void Activate()
 		{

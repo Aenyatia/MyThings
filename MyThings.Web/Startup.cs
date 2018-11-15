@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MyThings.Application.Mappers;
 using MyThings.Application.Services;
 using MyThings.Infrastructure.Data;
 using MyThings.Infrastructure.Identity;
@@ -44,6 +45,8 @@ namespace MyThings.Web
 
 			services.AddScoped<TaskService>();
 			services.AddScoped<CategoryService>();
+
+			services.AddSingleton(AutoMapperConfiguration.Configure());
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -1,4 +1,5 @@
-﻿using MyThings.Application.ViewModels.Categories;
+﻿using AutoMapper;
+using MyThings.Application.Dtos;
 using MyThings.Core.Domain;
 using MyThings.Infrastructure.Data;
 using System.Collections.Generic;
@@ -9,10 +10,12 @@ namespace MyThings.Application.Services
 	public class CategoryService
 	{
 		private readonly ApplicationDbContext _context;
+		private readonly IMapper _mapper;
 
-		public CategoryService(ApplicationDbContext context)
+		public CategoryService(ApplicationDbContext context, IMapper mapper)
 		{
 			_context = context;
+			_mapper = mapper;
 		}
 
 		public void CreateCategory(string userId, string name)
@@ -23,22 +26,19 @@ namespace MyThings.Application.Services
 			_context.SaveChanges();
 		}
 
-		public IEnumerable<CategoryViewModel> GetUserCategories(string userId)
+		public void DeleteCategory(string userId, int categoryId)
 		{
-			var categories = _context.Categories.Where(c => c.UserId == userId);
+			var category = _context.Categories.SingleOrDefault(c => c.Id == categoryId && c.UserId == userId);
 
-			return CreateCategoryViewModel(categories);
+			if (category != null)
+				_context.Categories.Remove(category);
 		}
 
-		private static IEnumerable<CategoryViewModel> CreateCategoryViewModel(IQueryable<Category> categories)
+		public IEnumerable<CategoryDto> GetUserCategories(string userId)
 		{
-			return categories
-				.Select(c => new CategoryViewModel
-				{
-					Id = c.Id,
-					Name = c.Name
-				})
-				.ToList();
+			var categories = _context.Categories.Where(c => c.UserId == userId).ToList();
+
+			return _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryDto>>(categories);
 		}
 	}
 }
