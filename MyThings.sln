@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyThings.Application", "MyT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyThings.Infrastructure", "MyThings.Infrastructure\MyThings.Infrastructure.csproj", "{3F02318D-512E-497F-8ECE-CC138EF4DDAA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.Tests", "MyThings.Tests\MyThings.Tests.csproj", "{D1BE6730-FB6E-4A10-BB70-D38599E4450F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{3F02318D-512E-497F-8ECE-CC138EF4DDAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F02318D-512E-497F-8ECE-CC138EF4DDAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F02318D-512E-497F-8ECE-CC138EF4DDAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1BE6730-FB6E-4A10-BB70-D38599E4450F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1BE6730-FB6E-4A10-BB70-D38599E4450F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1BE6730-FB6E-4A10-BB70-D38599E4450F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1BE6730-FB6E-4A10-BB70-D38599E4450F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
