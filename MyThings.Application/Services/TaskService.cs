@@ -36,23 +36,23 @@ namespace MyThings.Application.Services
 				_context.Tasks.Remove(task);
 		}
 
-		public void ActivateTask(string userId, int taskId)
+		public void Activate(string userId, int taskId)
 		{
 			var task = _context.Tasks.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
 			if (task == null)
 				throw new ArgumentNullException();
 
-			task.Activate();
+			task.SetActive();
 			_context.SaveChanges();
 		}
 
-		public void DeactivateTask(string userId, int taskId)
+		public void Deactivate(string userId, int taskId)
 		{
 			var task = _context.Tasks.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
 			if (task == null)
 				throw new ArgumentNullException();
 
-			task.Deactivate();
+			task.SetInactive();
 			_context.SaveChanges();
 		}
 

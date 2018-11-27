@@ -42,7 +42,7 @@ namespace MyThings.Web.Controllers
 		[HttpPost]
 		public IActionResult Complete(int taskId)
 		{
-			_taskService.DeactivateTask(User.GetUserId(), taskId);
+			_taskService.Deactivate(User.GetUserId(), taskId);
 
 			return RedirectToAction("Summary", "Tasks");
 		}
@@ -50,7 +50,7 @@ namespace MyThings.Web.Controllers
 		[HttpPost]
 		public IActionResult Active(int taskId)
 		{
-			_taskService.ActivateTask(User.GetUserId(), taskId);
+			_taskService.Activate(User.GetUserId(), taskId);
 
 			return RedirectToAction("Summary", "Tasks");
 		}

@@ -28,14 +28,20 @@ namespace MyThings.Core.Domain
 		public static Task Create(string userId, string name)
 			=> new Task(userId, name);
 
-		public void Activate()
+		public void SetActive()
 		{
+			if (!IsCompleted)
+				return;
+
 			IsCompleted = false;
 			CompletedAt = null;
 		}
 
-		public void Deactivate()
+		public void SetInactive()
 		{
+			if (IsCompleted)
+				return;
+
 			IsCompleted = true;
 			CompletedAt = DateTime.UtcNow;
 		}
