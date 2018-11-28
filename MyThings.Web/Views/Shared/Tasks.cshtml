@@ -10,13 +10,12 @@
 
 	<!-- Tasks -->
 	<div class="col-lg-8 p-lg-3">
-		@*<h3>@Model.TaskOption</h3>*@
 		<ul class="list-group">
 			@if (Model.Any())
 			{
 				foreach (var task in Model)
 				{
-					<li class="list-group-item list-group-item-action @*@task.PriorityClass()*@" data-task-id="@task.Id">
+					<li class="list-group-item list-group-item-action" data-task-id="@task.Id">
 						@task.Name
 					</li>
 				}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyThings.Application.Dtos;
 using MyThings.Application.Services;
 using MyThings.Application.Specifications;
 using MyThings.Infrastructure.Extensions;
@@ -10,14 +11,19 @@ namespace MyThings.Web.Controllers
 	public class TasksController : Controller
 	{
 		private readonly TaskService _taskService;
+		private readonly CategoryService _categoryService;
 
-		public TasksController(TaskService taskService)
+		public TasksController(TaskService taskService, CategoryService categoryService)
 		{
 			_taskService = taskService;
+			_categoryService = categoryService;
 		}
 
 		[HttpGet]
-		public IActionResult CreateTask() => View();
+		public IActionResult CreateTask()
+		{
+			return View();
+		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
@@ -31,7 +37,7 @@ namespace MyThings.Web.Controllers
 			return RedirectToAction("Summary", "Tasks");
 		}
 
-		[HttpDelete]
+		[HttpPost]
 		public IActionResult DeleteTask(int taskId)
 		{
 			_taskService.RemoveTask(User.GetUserId(), taskId);
@@ -121,6 +127,38 @@ namespace MyThings.Web.Controllers
 			var tasks = _taskService.GetTasksByCategory(User.GetUserId(), categoryId);
 
 			return View("Tasks", tasks);
+		}
+
+		[HttpGet]
+		public IActionResult Edit(int taskId)
+		{
+			var task = _taskService.GetTaskById(User.GetUserId(), taskId);
+
+			if (task == null)
+				return NotFound();
+
+			var vm = new EditTaskViewModel
+			{
+				Id = task.Id,
+				Name = task.Name,
+				DueDate = task.DueDate.ToString("yyyy-MM-dd"),
+				PriorityId = task.Priority,
+				Category = task.Category,
+				Categories = _categoryService.GetUserCategories(User.GetUserId())
+			};
+
+			return View(vm);
+		}
+
+		[HttpPost]
+		[AutoValidateAntiforgeryToken]
+		public IActionResult Edit(TaskDto viewModel)
+		{
+			if (!ModelState.IsValid)
+				return View();
+
+
+			return RedirectToAction("Summary", "Tasks");
 		}
 	}
 }

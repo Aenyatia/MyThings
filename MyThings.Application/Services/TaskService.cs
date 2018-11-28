@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MyThings.Application.Dtos;
 using MyThings.Application.Specifications;
 using MyThings.Core.Domain;
@@ -32,8 +33,11 @@ namespace MyThings.Application.Services
 		{
 			var task = _context.Tasks.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
 
-			if (task != null)
-				_context.Tasks.Remove(task);
+			if (task == null)
+				return;
+
+			_context.Tasks.Remove(task);
+			_context.SaveChanges();
 		}
 
 		public void Activate(string userId, int taskId)
@@ -54,6 +58,28 @@ namespace MyThings.Application.Services
 
 			task.SetInactive();
 			_context.SaveChanges();
+		}
+
+		public TaskDto GetTaskById(string userId, int taskId)
+		{
+			var task = _context.Tasks.Include(t => t.Category).SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
+
+			return _mapper.Map<Task, TaskDto>(task);
+		}
+
+		public void UpdateTask(TaskDto dto)
+		{
+			//var userId = User.GetUserId();
+			//var gig = _context.Gigs
+			//	.Include(g => g.Attendances).ThenInclude(a => a.Attendee)
+			//	.SingleOrDefault(g => g.Id == viewModel.Id && g.ArtistId == userId);
+
+			//if (gig == null)
+			//	return NotFound();
+
+			//gig.Modify(viewModel.GetDateTime(), viewModel.Venue, viewModel.GenreId);
+
+			//_context.SaveChanges();
 		}
 
 		public IEnumerable<TaskDto> GetTasks(ISpecification specification, int? noOfRecords)

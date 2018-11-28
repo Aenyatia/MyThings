@@ -30,8 +30,11 @@ namespace MyThings.Application.Services
 		{
 			var category = _context.Categories.SingleOrDefault(c => c.Id == categoryId && c.UserId == userId);
 
-			if (category != null)
-				_context.Categories.Remove(category);
+			if (category == null)
+				return;
+
+			_context.Categories.Remove(category);
+			_context.SaveChanges();
 		}
 
 		public IEnumerable<CategoryDto> GetUserCategories(string userId)

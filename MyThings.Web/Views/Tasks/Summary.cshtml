@@ -15,23 +15,38 @@
 		<h2>Summary</h2>
 		<br />
 
-		<h3>today</h3>
-		<ul class="list-group">
-			@if (Model.TodayTasks.Any())
-			{
-				foreach (var task in Model.TodayTasks)
+		<form method="post">
+			<h3>today</h3>
+			<ul class="list-group">
+				@if (Model.TodayTasks.Any())
 				{
-					<li class="list-group-item list-group-item-action" data-task-id="@task.Id">
-						@task.Name
-					</li>
+					foreach (var task in Model.TodayTasks)
+					{
+						<li class="list-group-item list-group-item-action">
+							@task.Name
+							<span class="actions">
+								<button type="submit" asp-controller="Tasks" asp-action="Complete" asp-route-taskId="@task.Id"
+										class="btn btn-success">
+									Done
+								</button>
+								<a class="btn btn-primary" asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Edit</a>
+								<a class="btn btn-secondary" asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Details</a>
+								<button type="submit" asp-controller="Tasks" asp-action="DeleteTask" asp-route-taskId="@task.Id"
+										class="btn btn-danger">
+									Delete
+								</button>
+							</span>
+						</li>
+					}
 				}
-			}
-			else
-			{
-				<li class="list-group-item disabled">No tasks.</li>
-			}
-		</ul>
-		<br />
+				else
+				{
+					<li class="list-group-item disabled">No tasks.</li>
+				}
+			</ul>
+			<br />
+		</form>
+
 
 		<h3>tomorrow</h3>
 		<ul class="list-group">

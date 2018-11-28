@@ -31,7 +31,7 @@ namespace MyThings.Web.Controllers
 			return RedirectToAction("Summary", "Tasks");
 		}
 
-		[HttpDelete]
+		[HttpPost]
 		public IActionResult DeleteCategory(int categoryId)
 		{
 			_categoryService.DeleteCategory(User.GetUserId(), categoryId);

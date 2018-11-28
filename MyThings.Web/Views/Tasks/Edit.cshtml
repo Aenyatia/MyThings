@@ -1,0 +1,40 @@
+﻿@using MyThings.Core.Domain
+@model EditTaskViewModel
+
+@{
+	ViewData["Title"] = "Edit task";
+}
+
+<div class="container">
+	<h2>@ViewBag.Title</h2>
+	<hr />
+
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<form method="post">
+		<div class="form-group">
+			<label asp-for="Name">Name</label>
+			<input asp-for="Name" type="text" class="form-control">
+			<span asp-validation-for="Name" class="text-danger"></span>
+		</div>
+
+		<div class="form-group">
+			<label asp-for="Category.Id">Category</label>
+			<select asp-for="Category.Id" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))" class="form-control">
+				<option selected>No category</option>
+			</select>
+			<span asp-validation-for="Category.Id" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="DueDate">Due Date</label>
+			<input asp-for="DueDate" type="date" class="form-control">
+			<span asp-validation-for="DueDate" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="PriorityId">Priority</label>
+			<select asp-for="@Model.PriorityId" asp-items="Html.GetEnumSelectList<Priority>()" class="form-control"></select>
+			<span asp-validation-for="PriorityId" class="text-danger"></span>
+		</div>
+
+		<button type="submit" class="btn btn-primary">Update</button>
+	</form>
+</div>
