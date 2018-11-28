@@ -67,19 +67,17 @@ namespace MyThings.Application.Services
 			return _mapper.Map<Task, TaskDto>(task);
 		}
 
-		public void UpdateTask(TaskDto dto)
+		public void UpdateTask(string userId, TaskDto dto)
 		{
-			//var userId = User.GetUserId();
-			//var gig = _context.Gigs
-			//	.Include(g => g.Attendances).ThenInclude(a => a.Attendee)
-			//	.SingleOrDefault(g => g.Id == viewModel.Id && g.ArtistId == userId);
+			var task = _context.Tasks.SingleOrDefault(t => t.Id == dto.Id && t.UserId == userId);
+			var category = _context.Categories.SingleOrDefault(t => t.Id == dto.Category.Id && t.UserId == userId);
 
-			//if (gig == null)
-			//	return NotFound();
+			if (task == null)
+				throw new ArgumentNullException();
 
-			//gig.Modify(viewModel.GetDateTime(), viewModel.Venue, viewModel.GenreId);
+			task.Edit(dto.Name, (Priority)dto.Priority, dto.DueDate, category);
 
-			//_context.SaveChanges();
+			_context.SaveChanges();
 		}
 
 		public IEnumerable<TaskDto> GetTasks(ISpecification specification, int? noOfRecords)
@@ -97,7 +95,8 @@ namespace MyThings.Application.Services
 		public IEnumerable<TaskDto> GetTasksByCategory(string userId, int categoryId)
 		{
 			var tasks = _context.Tasks
-				.Where(t => t.Category.Id == categoryId && t.UserId == userId)
+				.Where(t => t.Category.Id == categoryId && t.UserId == userId &&
+							t.IsCompleted == false)
 				.ToList();
 
 			return _mapper.Map<IEnumerable<Task>, IEnumerable<TaskDto>>(tasks);

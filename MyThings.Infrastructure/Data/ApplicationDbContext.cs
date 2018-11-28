@@ -12,5 +12,13 @@ namespace MyThings.Infrastructure.Data
 			: base(options)
 		{
 		}
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<Task>()
+				.HasOne(t => t.Category)
+				.WithMany()
+				.OnDelete(DeleteBehavior.SetNull);
+		}
 	}
 }

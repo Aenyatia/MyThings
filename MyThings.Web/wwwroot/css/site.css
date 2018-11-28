@@ -15,24 +15,24 @@ body {
 }
 
 .actions {
-	/*display: inline;*/
-	text-align: right;
-	display: inline;
-}
-
-.actions {
 	display: none;
 }
 
 li:hover .actions {
-	display: block;
+	display: inline;
+}
+
+.space {
+	display: flex;
+	justify-content: space-between;
 }
 
 #getStarted {
 	padding-top: 18%;
 	text-align: center;
 	color: #343a40;
-	text-shadow: 0px 4px 3px rgba(0,0,0,0.4), 0px 8px 13px rgba(0,0,0,0.1), 0px 18px 23px rgba(0,0,0,0.1);
+	text-shadow: 0 4px 3px #000000, 0 8px 13px #000000, 0 18px 23px #000000;
+	text-shadow: 0 4px 3px rgba(0,0,0,0.4), 0 8px 13px rgba(0,0,0,0.1), 0 18px 23px rgba(0,0,0,0.1);
 }
 
 	#getStarted h1 {
@@ -43,5 +43,6 @@ li:hover .actions {
 	#getStarted hr {
 		width: 400px;
 		border-top: 1px solid #f8f8f8;
+		border-bottom: 1px solid #000000;
 		border-bottom: 1px solid rgba(0,0,0,0.2);
 	}

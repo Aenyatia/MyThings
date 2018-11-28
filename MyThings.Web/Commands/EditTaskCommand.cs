@@ -1,11 +1,11 @@
-﻿using MyThings.Application.Dtos;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using MyThings.Application.Dtos;
 
-namespace MyThings.Web.ViewModels
+namespace MyThings.Web.Commands
 {
-	public class EditTaskViewModel
+	public class EditTaskCommand
 	{
-		public string Id { get; set; }
+		public int Id { get; set; }
 		public string Name { get; set; }
 		public string DueDate { get; set; }
 

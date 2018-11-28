@@ -5,6 +5,7 @@ using MyThings.Application.Specifications;
 using MyThings.Infrastructure.Extensions;
 using MyThings.Web.Commands;
 using MyThings.Web.ViewModels;
+using System;
 
 namespace MyThings.Web.Controllers
 {
@@ -137,7 +138,7 @@ namespace MyThings.Web.Controllers
 			if (task == null)
 				return NotFound();
 
-			var vm = new EditTaskViewModel
+			var vm = new EditTaskCommand
 			{
 				Id = task.Id,
 				Name = task.Name,
@@ -152,11 +153,29 @@ namespace MyThings.Web.Controllers
 
 		[HttpPost]
 		[AutoValidateAntiforgeryToken]
-		public IActionResult Edit(TaskDto viewModel)
+		public IActionResult Edit(EditTaskCommand command)
 		{
 			if (!ModelState.IsValid)
-				return View();
+			{
+				command.Categories = _categoryService.GetUserCategories(User.GetUserId());
 
+				return View();
+			}
+
+			var taskd = new TaskDto
+			{
+				Id = command.Id,
+				Priority = command.PriorityId,
+				Name = command.Name,
+				Category = new CategoryDto
+				{
+					Id = command.Category.Id,
+					Name = command.Category.Name
+				},
+				DueDate = DateTime.Parse(command.DueDate)
+			};
+
+			_taskService.UpdateTask(User.GetUserId(), taskd);
 
 			return RedirectToAction("Summary", "Tasks");
 		}

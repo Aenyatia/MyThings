@@ -23,19 +23,27 @@
 					foreach (var task in Model.TodayTasks)
 					{
 						<li class="list-group-item list-group-item-action">
-							@task.Name
-							<span class="actions">
-								<button type="submit" asp-controller="Tasks" asp-action="Complete" asp-route-taskId="@task.Id"
-										class="btn btn-success">
-									Done
-								</button>
-								<a class="btn btn-primary" asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Edit</a>
-								<a class="btn btn-secondary" asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id">Details</a>
-								<button type="submit" asp-controller="Tasks" asp-action="DeleteTask" asp-route-taskId="@task.Id"
-										class="btn btn-danger">
-									Delete
-								</button>
-							</span>
+							<div class="space">
+								@task.Name
+								<span class="actions">
+									<button type="submit" asp-controller="Tasks" asp-action="Complete" asp-route-taskId="@task.Id"
+									        class="btn btn-sm btn-success" title="Complete">
+										<i class="fas fa-check"></i>
+									</button>
+									<a asp-controller="Tasks" asp-action="" asp-route-taskId="@task.Id"
+									   class="btn btn-sm btn-secondary" title="Details">
+										<i class="fas fa-info-circle"></i>
+									</a>
+									<a asp-controller="Tasks" asp-action="Edit" asp-route-taskId="@task.Id"
+									   class="btn btn-sm btn-secondary" title="Edit">
+										<i class="fas fa-edit"></i>
+									</a>
+									<button type="submit" asp-controller="Tasks" asp-action="DeleteTask" asp-route-taskId="@task.Id"
+									        class="btn btn-sm btn-danger" title="Delete">
+										<i class="fas fa-trash"></i>
+									</button>
+								</span>
+							</div>
 						</li>
 					}
 				}
@@ -45,61 +53,76 @@
 				}
 			</ul>
 			<br />
+
+			<h3>tomorrow</h3>
+			<ul class="list-group">
+				@if (Model.TomorrowTasks.Any())
+				{
+					foreach (var task in Model.TomorrowTasks)
+					{
+						<li class="list-group-item list-group-item-action test" data-task-id="@task.Id">
+						</li>
+					}
+				}
+				else
+				{
+					<li class="list-group-item disabled">No tasks.</li>
+				}
+			</ul>
+			<br />
+
+			<h3>later</h3>
+			<ul class="list-group">
+				@if (Model.LaterTasks.Any())
+				{
+					foreach (var task in Model.LaterTasks)
+					{
+						<li class="list-group-item list-group-item-action" data-task-id="@task.Id">
+							@task.Name
+						</li>
+					}
+				}
+				else
+				{
+					<li class="list-group-item disabled">No tasks.</li>
+				}
+			</ul>
+			<br />
+
+			<h3>recently completed</h3>
+			<ul class="list-group">
+				@if (Model.RecentlyCompletedTasks.Any())
+				{
+					foreach (var task in Model.RecentlyCompletedTasks)
+					{
+						<li class="list-group-item list-group-item-action" data-task-id="@task.Id">
+							<div class="space">
+								@task.Name
+								<span class="actions">
+									<button type="submit" asp-controller="Tasks" asp-action="Active" asp-route-taskId="@task.Id"
+									        class="btn btn-sm btn-primary" title="Complete">
+										<i class="fas fa-undo"></i>
+									</button>
+									<a asp-controller="Tasks" asp-action="" asp-route-taskId="@task.Id"
+									   class="btn btn-sm btn-secondary" title="Details">
+										<i class="fas fa-info-circle"></i>
+									</a>
+									<button type="submit" asp-controller="Tasks" asp-action="DeleteTask" asp-route-taskId="@task.Id"
+									        class="btn btn-sm btn-danger" title="Delete">
+										<i class="fas fa-trash"></i>
+									</button>
+								</span>
+							</div>
+						</li>
+					}
+				}
+				else
+				{
+					<li class="list-group-item disabled">No tasks.</li>
+				}
+			</ul>
 		</form>
 
-
-		<h3>tomorrow</h3>
-		<ul class="list-group">
-			@if (Model.TomorrowTasks.Any())
-			{
-				foreach (var task in Model.TomorrowTasks)
-				{
-					<li class="list-group-item list-group-item-action" data-task-id="@task.Id">
-						@task.Name
-					</li>
-				}
-			}
-			else
-			{
-				<li class="list-group-item disabled">No tasks.</li>
-			}
-		</ul>
-		<br />
-
-		<h3>later</h3>
-		<ul class="list-group">
-			@if (Model.LaterTasks.Any())
-			{
-				foreach (var task in Model.LaterTasks)
-				{
-					<li class="list-group-item list-group-item-action" data-task-id="@task.Id">
-						@task.Name
-					</li>
-				}
-			}
-			else
-			{
-				<li class="list-group-item disabled">No tasks.</li>
-			}
-		</ul>
-		<br />
-
-		<h3>recently completed</h3>
-		<ul class="list-group">
-			@if (Model.RecentlyCompletedTasks.Any())
-			{
-				foreach (var task in Model.RecentlyCompletedTasks)
-				{
-					<li class="list-group-item list-group-item-action" data-task-id="@task.Id">
-						@task.Name
-					</li>
-				}
-			}
-			else
-			{
-				<li class="list-group-item disabled">No tasks.</li>
-			}
-		</ul>
 	</div>
 
 	<div class="col-lg-2 p-lg-3">
