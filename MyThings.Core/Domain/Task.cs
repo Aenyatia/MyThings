@@ -10,6 +10,8 @@ namespace MyThings.Core.Domain
 		public string Name { get; protected set; }
 		public Priority Priority { get; protected set; }
 		public DateTime DueDate { get; protected set; }
+
+		public int CategoryId { get; protected set; }
 		public Category Category { get; protected set; }
 
 		public bool IsCompleted { get; protected set; }
@@ -19,8 +21,8 @@ namespace MyThings.Core.Domain
 		{
 			UserId = userId;
 			Name = name;
-			Priority = Priority.Default;
-			DueDate = DateTime.UtcNow;
+			Priority = Priority.NoPriority;
+			DueDate = DateTime.Now;
 			IsCompleted = false;
 			CompletedAt = null;
 		}
@@ -43,15 +45,15 @@ namespace MyThings.Core.Domain
 				return;
 
 			IsCompleted = true;
-			CompletedAt = DateTime.UtcNow;
+			CompletedAt = DateTime.Now;
 		}
 
-		public void Edit(string name, Priority priority, DateTime dueDate, Category category)
+		public void Edit(string name, Priority priority, DateTime dueDate, int categoryId)
 		{
 			Name = name;
 			Priority = priority;
 			DueDate = dueDate;
-			Category = category;
+			CategoryId = categoryId;
 		}
 	}
 }

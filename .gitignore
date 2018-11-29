@@ -261,4 +261,6 @@ __pycache__/
 *.pyc
 
 # For development time
-/ToDoList/wwwroot/lib/
+./MyThings.Web/wwwroot/lib/
+/MyThings.Web/wwwroot/lib/
+/MyThings/MyThings.Web/wwwroot/lib/

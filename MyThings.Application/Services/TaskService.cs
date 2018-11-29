@@ -70,12 +70,11 @@ namespace MyThings.Application.Services
 		public void UpdateTask(string userId, TaskDto dto)
 		{
 			var task = _context.Tasks.SingleOrDefault(t => t.Id == dto.Id && t.UserId == userId);
-			var category = _context.Categories.SingleOrDefault(t => t.Id == dto.Category.Id && t.UserId == userId);
 
 			if (task == null)
 				throw new ArgumentNullException();
 
-			task.Edit(dto.Name, (Priority)dto.Priority, dto.DueDate, category);
+			task.Edit(dto.Name, (Priority)dto.Priority, dto.DueDate, dto.Category.Id);
 
 			_context.SaveChanges();
 		}

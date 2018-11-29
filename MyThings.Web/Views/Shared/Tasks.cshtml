@@ -2,14 +2,14 @@
 
 <div class="row">
 	<!-- Tasks and categories navbar -->
-	<div class="col-lg-2 p-lg-3">
+	<div class="col-lg-2">
 		@await Component.InvokeAsync(typeof(TaskViewComponent))
 		<br />
 		@await Component.InvokeAsync(typeof(CategoryViewComponent))
 	</div>
 
 	<!-- Tasks -->
-	<div class="col-lg-8 p-lg-3">
+	<div class="col-lg-8">
 		<ul class="list-group">
 			@if (Model.Any())
 			{
@@ -28,7 +28,7 @@
 	</div>
 
 	<!-- Details -->
-	<div class="col-lg-2 p-lg-3">
+	<div class="col-lg-2">
 		<div id="detailsTab"></div>
 	</div>
 </div>

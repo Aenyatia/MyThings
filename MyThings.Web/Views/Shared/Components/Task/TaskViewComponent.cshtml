@@ -1,28 +1,24 @@
 ﻿@model TasksNumbersDto
 
 <div>
-	<h2>Tasks</h2>
-
-	<div>
-		<a asp-controller="Tasks" asp-action="TodayTasks" class="btn btn-secondary btn-block">
-			Today
-			<span class="badge badge-light badge-pill float-right">@Model.Today</span>
-		</a>
-		<a asp-controller="Tasks" asp-action="TomorrowTasks" class="btn btn-secondary btn-block">
-			Tomorrow
-			<span class="badge badge-light badge-pill float-right">@Model.Tomorrow</span>
-		</a>
-		<a asp-controller="Tasks" asp-action="LaterTasks" class="btn btn-secondary btn-block">
-			Later
-			<span class="badge badge-light badge-pill float-right">@Model.Later</span>
-		</a>
-		<a asp-controller="Tasks" asp-action="NotDoneTasks" class="btn btn-secondary btn-block">
-			Not done
-			<span class="badge badge-light badge-pill float-right">@Model.NotDone</span>
-		</a>
-		<a asp-controller="Tasks" asp-action="CompletedTasks" class="btn btn-secondary btn-block">
-			Completed
-			<span class="badge badge-light badge-pill float-right">@Model.Completed</span>
-		</a>
-	</div>
+	<a asp-controller="Tasks" asp-action="GetTodayTasks" class="btn btn-secondary btn-block">
+		Today
+		<span class="badge badge-light badge-pill float-right">@Model.Today</span>
+	</a>
+	<a asp-controller="Tasks" asp-action="GetTomorrowTasks" class="btn btn-secondary btn-block">
+		Tomorrow
+		<span class="badge badge-light badge-pill float-right">@Model.Tomorrow</span>
+	</a>
+	<a asp-controller="Tasks" asp-action="GetLaterTasks" class="btn btn-secondary btn-block">
+		Later
+		<span class="badge badge-light badge-pill float-right">@Model.Later</span>
+	</a>
+	<a asp-controller="Tasks" asp-action="GetUndoneTasks" class="btn btn-secondary btn-block">
+		Not done
+		<span class="badge badge-light badge-pill float-right">@Model.NotDone</span>
+	</a>
+	<a asp-controller="Tasks" asp-action="GetCompletedTasks" class="btn btn-secondary btn-block">
+		Completed
+		<span class="badge badge-light badge-pill float-right">@Model.Completed</span>
+	</a>
 </div>

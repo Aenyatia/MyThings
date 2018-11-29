@@ -3,9 +3,9 @@ using MyThings.Web.Commands;
 
 namespace MyThings.Web.Validations
 {
-	public class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
+	public class EditTaskValidator : AbstractValidator<EditTaskCommand>
 	{
-		public CreateCategoryValidator()
+		public EditTaskValidator()
 		{
 			RuleFor(p => p.Name)
 				.NotEmpty()

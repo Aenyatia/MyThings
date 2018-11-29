@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using MyThings.Application.Dtos;
+﻿using MyThings.Application.Dtos;
+using System;
+using System.Collections.Generic;
 
 namespace MyThings.Web.Commands
 {
@@ -7,10 +8,9 @@ namespace MyThings.Web.Commands
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public string DueDate { get; set; }
-
+		public DateTime DueDate { get; set; }
 		public int PriorityId { get; set; }
-		public CategoryDto Category { get; set; }
+		public int CategoryId { get; set; }
 
 		public IEnumerable<CategoryDto> Categories { get; set; }
 	}

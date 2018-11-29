@@ -39,6 +39,7 @@ namespace MyThings.Web.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public IActionResult DeleteTask(int taskId)
 		{
 			_taskService.RemoveTask(User.GetUserId(), taskId);
@@ -47,7 +48,7 @@ namespace MyThings.Web.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Complete(int taskId)
+		public IActionResult DeactivateTask(int taskId)
 		{
 			_taskService.Deactivate(User.GetUserId(), taskId);
 
@@ -55,15 +56,15 @@ namespace MyThings.Web.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Active(int taskId)
+		public IActionResult ActivateTask(int taskId)
 		{
 			_taskService.Activate(User.GetUserId(), taskId);
 
 			return RedirectToAction("Summary", "Tasks");
 		}
 
-		[HttpGet]
-		public IActionResult TodayTasks()
+		[HttpGet("tasks/today")]
+		public IActionResult GetTodayTasks()
 		{
 			var userId = User.GetUserId();
 			var tasks = _taskService.GetTasks(new TodayTasksSpecification(userId), null);
@@ -72,7 +73,7 @@ namespace MyThings.Web.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult TomorrowTasks()
+		public IActionResult GetTomorrowTasks()
 		{
 			var userId = User.GetUserId();
 			var tasks = _taskService.GetTasks(new TomorrowTasksSpecification(userId), null);
@@ -81,7 +82,7 @@ namespace MyThings.Web.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult LaterTasks()
+		public IActionResult GetLaterTasks()
 		{
 			var userId = User.GetUserId();
 			var tasks = _taskService.GetTasks(new LaterTasksSpecification(userId), null);
@@ -90,7 +91,7 @@ namespace MyThings.Web.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult NotDoneTasks()
+		public IActionResult GetUndoneTasks()
 		{
 			var userId = User.GetUserId();
 			var tasks = _taskService.GetTasks(new NotDoneTasksSpecification(userId), null);
@@ -99,7 +100,7 @@ namespace MyThings.Web.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult CompletedTasks()
+		public IActionResult GetCompletedTasks()
 		{
 			var userId = User.GetUserId();
 			var tasks = _taskService.GetTasks(new CompletedTasksSpecification(userId), null);
@@ -131,7 +132,7 @@ namespace MyThings.Web.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult Edit(int taskId)
+		public IActionResult EditTask(int taskId)
 		{
 			var task = _taskService.GetTaskById(User.GetUserId(), taskId);
 
@@ -144,7 +145,7 @@ namespace MyThings.Web.Controllers
 				Name = task.Name,
 				DueDate = task.DueDate.ToString("yyyy-MM-dd"),
 				PriorityId = task.Priority,
-				Category = task.Category,
+				CategoryId = task.Category.Id,
 				Categories = _categoryService.GetUserCategories(User.GetUserId())
 			};
 
@@ -153,7 +154,7 @@ namespace MyThings.Web.Controllers
 
 		[HttpPost]
 		[AutoValidateAntiforgeryToken]
-		public IActionResult Edit(EditTaskCommand command)
+		public IActionResult EditTask(EditTaskCommand command)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -164,20 +165,25 @@ namespace MyThings.Web.Controllers
 
 			var taskd = new TaskDto
 			{
-				Id = command.Id,
-				Priority = command.PriorityId,
-				Name = command.Name,
-				Category = new CategoryDto
-				{
-					Id = command.Category.Id,
-					Name = command.Category.Name
-				},
-				DueDate = DateTime.Parse(command.DueDate)
+				//Id = command.Id,
+				//Priority = command.PriorityId,
+				//Name = command.Name,
+				//Category = new CategoryDto
+				//{
+				//	Id = command.Category.Id,
+				//	Name = command.Category.Name
+				//},
+				//DueDate = DateTime.Parse(command.DueDate)
 			};
 
 			_taskService.UpdateTask(User.GetUserId(), taskd);
 
 			return RedirectToAction("Summary", "Tasks");
+		}
+
+		public IActionResult GetTaskDetails(int taskId)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -9,15 +9,10 @@ namespace MyThings.Web.Components
 		private readonly TaskService _taskService;
 
 		public TaskViewComponent(TaskService taskService)
-		{
-			_taskService = taskService;
-		}
+			=> _taskService = taskService;
 
 		public IViewComponentResult Invoke()
-		{
-			var userId = HttpContext.User.GetUserId();
-
-			return View("TaskViewComponent", _taskService.GetTasksNumbers(userId));
-		}
+			=> View("TaskViewComponent",
+				_taskService.GetTasksNumbers(HttpContext.User.GetUserId()));
 	}
 }
