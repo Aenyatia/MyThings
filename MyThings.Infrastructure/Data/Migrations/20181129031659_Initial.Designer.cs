@@ -10,7 +10,7 @@ using MyThings.Infrastructure.Data;
 namespace MyThings.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181115154535_Initial")]
+    [Migration("20181129031659_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,7 +67,8 @@ namespace MyThings.Infrastructure.Data.Migrations
                 {
                     b.HasOne("MyThings.Core.Domain.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 #pragma warning restore 612, 618
         }

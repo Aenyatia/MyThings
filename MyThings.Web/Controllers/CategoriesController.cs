@@ -20,7 +20,7 @@ namespace MyThings.Web.Controllers
 		public IActionResult CreateCategory() => View();
 
 		[HttpPost]
-		[AutoValidateAntiforgeryToken]
+		[ValidateAntiForgeryToken]
 		public IActionResult CreateCategory(CreateCategoryCommand command)
 		{
 			if (!ModelState.IsValid)
@@ -31,20 +31,21 @@ namespace MyThings.Web.Controllers
 			return RedirectToAction("Summary", "Tasks");
 		}
 
-		[HttpPost]
-		public IActionResult DeleteCategory(int categoryId)
-		{
-			_categoryService.DeleteCategory(User.GetUserId(), categoryId);
-
-			return RedirectToAction("ManageCategories", "Categories");
-		}
-
 		[HttpGet]
 		public IActionResult ManageCategories()
 		{
 			var categories = _categoryService.GetUserCategories(User.GetUserId());
 
 			return View(categories);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult DeleteCategory(int categoryId)
+		{
+			_categoryService.DeleteCategory(User.GetUserId(), categoryId);
+
+			return RedirectToAction("ManageCategories", "Categories");
 		}
 	}
 }

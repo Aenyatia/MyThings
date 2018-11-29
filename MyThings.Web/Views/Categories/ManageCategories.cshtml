@@ -7,8 +7,8 @@
 <div class="container">
 	<h2>@ViewBag.Title</h2>
 	<hr />
-	<form method="post">
 
+	<form method="post">
 		<ul class="list-group">
 			@if (Model.Any())
 			{
@@ -16,7 +16,10 @@
 				{
 					<li class="list-group-item">
 						@category.Name
-						<button type="submit" asp-controller="Categories" asp-action="DeleteCategory" asp-route-categoryId="@category.Id" class="btn btn-danger float-right">Delete</button>
+						<button type="submit" asp-controller="Categories" asp-action="DeleteCategory" asp-route-categoryId="@category.Id"
+								class="btn btn-danger float-right">
+							Delete
+						</button>
 					</li>
 				}
 			}
@@ -26,5 +29,4 @@
 			}
 		</ul>
 	</form>
-
 </div>

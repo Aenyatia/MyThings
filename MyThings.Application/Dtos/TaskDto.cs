@@ -8,6 +8,7 @@ namespace MyThings.Application.Dtos
 		public string Name { get; set; }
 		public DateTime DueDate { get; set; }
 		public int Priority { get; set; }
-		public CategoryDto Category { get; set; }
+		public int? CategoryId { get; set; }
+		public CategoryDto CategoryDto { get; set; }
 	}
 }

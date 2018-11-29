@@ -18,17 +18,17 @@ body {
 	padding-top: 25px;
 }
 
+.space-between {
+	display: flex;
+	justify-content: space-between;
+}
+
 .actions {
 	display: none;
 }
 
 li:hover .actions {
 	display: inline;
-}
-
-.space-between {
-	display: flex;
-	justify-content: space-between;
 }
 
 #getStarted {

@@ -11,7 +11,7 @@ namespace MyThings.Core.Domain
 		public Priority Priority { get; protected set; }
 		public DateTime DueDate { get; protected set; }
 
-		public int CategoryId { get; protected set; }
+		public int? CategoryId { get; protected set; }
 		public Category Category { get; protected set; }
 
 		public bool IsCompleted { get; protected set; }
@@ -48,7 +48,7 @@ namespace MyThings.Core.Domain
 			CompletedAt = DateTime.Now;
 		}
 
-		public void Edit(string name, Priority priority, DateTime dueDate, int categoryId)
+		public void Edit(string name, Priority priority, DateTime dueDate, int? categoryId)
 		{
 			Name = name;
 			Priority = priority;

@@ -2,6 +2,7 @@
 using MyThings.Application.Dtos;
 using MyThings.Core.Domain;
 using MyThings.Infrastructure.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,6 +19,13 @@ namespace MyThings.Application.Services
 			_mapper = mapper;
 		}
 
+		public IEnumerable<CategoryDto> GetUserCategories(string userId)
+		{
+			var categories = _context.Categories.Where(c => c.UserId == userId).ToList();
+
+			return _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryDto>>(categories);
+		}
+
 		public void CreateCategory(string userId, string name)
 		{
 			var category = Category.Create(userId, name);
@@ -31,17 +39,10 @@ namespace MyThings.Application.Services
 			var category = _context.Categories.SingleOrDefault(c => c.Id == categoryId && c.UserId == userId);
 
 			if (category == null)
-				return;
+				throw new ArgumentException(nameof(categoryId));
 
 			_context.Categories.Remove(category);
 			_context.SaveChanges();
-		}
-
-		public IEnumerable<CategoryDto> GetUserCategories(string userId)
-		{
-			var categories = _context.Categories.Where(c => c.UserId == userId).ToList();
-
-			return _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryDto>>(categories);
 		}
 	}
 }

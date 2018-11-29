@@ -1,5 +1,4 @@
-﻿@using MyThings.Core.Domain
-@model EditTaskCommand
+﻿@model EditTaskCommand
 
 @{
 	ViewData["Title"] = "Edit task";
@@ -9,7 +8,6 @@
 	<h2>@ViewBag.Title</h2>
 	<hr />
 
-	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 	<form method="post">
 		<div class="form-group">
 			<label asp-for="Name">Name</label>
@@ -20,19 +18,23 @@
 		<div class="form-group">
 			<label asp-for="CategoryId">Category</label>
 			<select asp-for="CategoryId" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))" class="form-control">
-				<option selected value="0">No category</option>
+				<option value="0" selected>No category</option>
 			</select>
 		</div>
 		<div class="form-group">
 			<label asp-for="DueDate">Due Date</label>
 			<input asp-for="DueDate" type="date" class="form-control">
-			<span asp-validation-for="DueDate" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="PriorityId">Priority</label>
-			<select asp-for="@Model.PriorityId" asp-items="Html.GetEnumSelectList<Priority>()" class="form-control"></select>
+			<select asp-for="@Model.PriorityId" class="form-control">
+				<option value="0">No priority</option>
+				<option value="1">Low</option>
+				<option value="2">Medium</option>
+				<option value="3">High</option>
+			</select>
 		</div>
-		
+
 		<input type="hidden" asp-for="Id" value="@Model.Id" />
 		<button type="submit" class="btn btn-primary">Update</button>
 	</form>

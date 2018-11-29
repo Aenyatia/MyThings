@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyThings.Application.Dtos;
 using MyThings.Application.Services;
 using MyThings.Application.Specifications;
 using MyThings.Infrastructure.Extensions;
 using MyThings.Web.Commands;
 using MyThings.Web.ViewModels;
-using System;
 
 namespace MyThings.Web.Controllers
 {
+	[Authorize]
 	public class TasksController : Controller
 	{
 		private readonly TaskService _taskService;
@@ -20,49 +21,6 @@ namespace MyThings.Web.Controllers
 			_categoryService = categoryService;
 		}
 
-		[HttpGet]
-		public IActionResult CreateTask()
-		{
-			return View();
-		}
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public IActionResult CreateTask(CreateTaskCommand command)
-		{
-			if (!ModelState.IsValid)
-				return View(command);
-
-			_taskService.CreateTask(User.GetUserId(), command.Name);
-
-			return RedirectToAction("Summary", "Tasks");
-		}
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public IActionResult DeleteTask(int taskId)
-		{
-			_taskService.RemoveTask(User.GetUserId(), taskId);
-
-			return RedirectToAction("Summary", "Tasks");
-		}
-
-		[HttpPost]
-		public IActionResult DeactivateTask(int taskId)
-		{
-			_taskService.Deactivate(User.GetUserId(), taskId);
-
-			return RedirectToAction("Summary", "Tasks");
-		}
-
-		[HttpPost]
-		public IActionResult ActivateTask(int taskId)
-		{
-			_taskService.Activate(User.GetUserId(), taskId);
-
-			return RedirectToAction("Summary", "Tasks");
-		}
-
 		[HttpGet("tasks/today")]
 		public IActionResult GetTodayTasks()
 		{
@@ -72,7 +30,7 @@ namespace MyThings.Web.Controllers
 			return View("Tasks", tasks);
 		}
 
-		[HttpGet]
+		[HttpGet("tasks/tomorrow")]
 		public IActionResult GetTomorrowTasks()
 		{
 			var userId = User.GetUserId();
@@ -81,7 +39,7 @@ namespace MyThings.Web.Controllers
 			return View("Tasks", tasks);
 		}
 
-		[HttpGet]
+		[HttpGet("tasks/later")]
 		public IActionResult GetLaterTasks()
 		{
 			var userId = User.GetUserId();
@@ -90,7 +48,7 @@ namespace MyThings.Web.Controllers
 			return View("Tasks", tasks);
 		}
 
-		[HttpGet]
+		[HttpGet("tasks/undone")]
 		public IActionResult GetUndoneTasks()
 		{
 			var userId = User.GetUserId();
@@ -99,7 +57,7 @@ namespace MyThings.Web.Controllers
 			return View("Tasks", tasks);
 		}
 
-		[HttpGet]
+		[HttpGet("tasks/completed")]
 		public IActionResult GetCompletedTasks()
 		{
 			var userId = User.GetUserId();
@@ -108,7 +66,23 @@ namespace MyThings.Web.Controllers
 			return View("Tasks", tasks);
 		}
 
-		[HttpGet]
+		[HttpGet("tasks/category/{categoryId}")]
+		public IActionResult GetTasksByCategory(int categoryId)
+		{
+			var tasks = _taskService.GetTasksByCategory(User.GetUserId(), categoryId);
+
+			return View("Tasks", tasks);
+		}
+
+		[HttpGet("tasks/details/{taskId}")]
+		public IActionResult GetTaskDetails(int taskId)
+		{
+			var task = _taskService.GetTaskById(User.GetUserId(), taskId);
+
+			return View("Details", task);
+		}
+
+		[HttpGet("tasks/summary")]
 		public IActionResult Summary()
 		{
 			var userId = User.GetUserId();
@@ -124,11 +98,18 @@ namespace MyThings.Web.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult GetTasksByCategory(int categoryId)
-		{
-			var tasks = _taskService.GetTasksByCategory(User.GetUserId(), categoryId);
+		public IActionResult CreateTask() => View();
 
-			return View("Tasks", tasks);
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult CreateTask(CreateTaskCommand command)
+		{
+			if (!ModelState.IsValid)
+				return View(command);
+
+			_taskService.CreateTask(User.GetUserId(), command.Name);
+
+			return RedirectToAction("Summary", "Tasks");
 		}
 
 		[HttpGet]
@@ -139,51 +120,68 @@ namespace MyThings.Web.Controllers
 			if (task == null)
 				return NotFound();
 
-			var vm = new EditTaskCommand
+			var command = new EditTaskCommand
 			{
 				Id = task.Id,
 				Name = task.Name,
-				DueDate = task.DueDate.ToString("yyyy-MM-dd"),
+				DueDate = task.DueDate,
 				PriorityId = task.Priority,
-				CategoryId = task.Category.Id,
+				CategoryId = task.CategoryId,
 				Categories = _categoryService.GetUserCategories(User.GetUserId())
 			};
 
-			return View(vm);
+			return View(command);
 		}
 
 		[HttpPost]
-		[AutoValidateAntiforgeryToken]
+		[ValidateAntiForgeryToken]
 		public IActionResult EditTask(EditTaskCommand command)
 		{
 			if (!ModelState.IsValid)
 			{
 				command.Categories = _categoryService.GetUserCategories(User.GetUserId());
-
-				return View();
+				return View(command);
 			}
 
-			var taskd = new TaskDto
+			var taskDto = new TaskDto
 			{
-				//Id = command.Id,
-				//Priority = command.PriorityId,
-				//Name = command.Name,
-				//Category = new CategoryDto
-				//{
-				//	Id = command.Category.Id,
-				//	Name = command.Category.Name
-				//},
-				//DueDate = DateTime.Parse(command.DueDate)
+				Id = command.Id,
+				Name = command.Name,
+				DueDate = command.DueDate,
+				Priority = command.PriorityId,
+				CategoryId = command.GetCategoryId()
 			};
 
-			_taskService.UpdateTask(User.GetUserId(), taskd);
+			_taskService.UpdateTask(User.GetUserId(), taskDto);
 
 			return RedirectToAction("Summary", "Tasks");
 		}
 
-		public IActionResult GetTaskDetails(int taskId)
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult DeleteTask(int taskId)
 		{
-			throw new NotImplementedException();
+			_taskService.DeleteTask(User.GetUserId(), taskId);
+
+			return RedirectToAction("Summary", "Tasks");
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult ActivateTask(int taskId)
+		{
+			_taskService.Activate(User.GetUserId(), taskId);
+
+			return RedirectToAction("Summary", "Tasks");
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult DeactivateTask(int taskId)
+		{
+			_taskService.Deactivate(User.GetUserId(), taskId);
+
+			return RedirectToAction("Summary", "Tasks");
 		}
 	}
 }

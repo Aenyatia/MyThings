@@ -21,62 +21,21 @@ namespace MyThings.Application.Services
 			_mapper = mapper;
 		}
 
-		public void CreateTask(string userId, string name)
-		{
-			var task = Task.Create(userId, name);
-
-			_context.Tasks.Add(task);
-			_context.SaveChanges();
-		}
-
-		public void RemoveTask(string userId, int taskId)
-		{
-			var task = _context.Tasks.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
-
-			if (task == null)
-				return;
-
-			_context.Tasks.Remove(task);
-			_context.SaveChanges();
-		}
-
-		public void Activate(string userId, int taskId)
-		{
-			var task = _context.Tasks.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
-			if (task == null)
-				throw new ArgumentNullException();
-
-			task.SetActive();
-			_context.SaveChanges();
-		}
-
-		public void Deactivate(string userId, int taskId)
-		{
-			var task = _context.Tasks.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
-			if (task == null)
-				throw new ArgumentNullException();
-
-			task.SetInactive();
-			_context.SaveChanges();
-		}
-
 		public TaskDto GetTaskById(string userId, int taskId)
 		{
-			var task = _context.Tasks.Include(t => t.Category).SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
+			var task = GetTask(userId, taskId);
 
 			return _mapper.Map<Task, TaskDto>(task);
 		}
 
-		public void UpdateTask(string userId, TaskDto dto)
+		public IEnumerable<TaskDto> GetTasksByCategory(string userId, int categoryId)
 		{
-			var task = _context.Tasks.SingleOrDefault(t => t.Id == dto.Id && t.UserId == userId);
+			var tasks = _context.Tasks
+				.Where(t => t.Category.Id == categoryId && t.UserId == userId &&
+							t.IsCompleted == false)
+				.ToList();
 
-			if (task == null)
-				throw new ArgumentNullException();
-
-			task.Edit(dto.Name, (Priority)dto.Priority, dto.DueDate, dto.Category.Id);
-
-			_context.SaveChanges();
+			return _mapper.Map<IEnumerable<Task>, IEnumerable<TaskDto>>(tasks);
 		}
 
 		public IEnumerable<TaskDto> GetTasks(ISpecification specification, int? noOfRecords)
@@ -86,16 +45,6 @@ namespace MyThings.Application.Services
 			var tasks = _context.Tasks
 				.Where(specification.IsSatisfiedBy)
 				.Take(number)
-				.ToList();
-
-			return _mapper.Map<IEnumerable<Task>, IEnumerable<TaskDto>>(tasks);
-		}
-
-		public IEnumerable<TaskDto> GetTasksByCategory(string userId, int categoryId)
-		{
-			var tasks = _context.Tasks
-				.Where(t => t.Category.Id == categoryId && t.UserId == userId &&
-							t.IsCompleted == false)
 				.ToList();
 
 			return _mapper.Map<IEnumerable<Task>, IEnumerable<TaskDto>>(tasks);
@@ -112,5 +61,62 @@ namespace MyThings.Application.Services
 				Completed = _context.Tasks.Count(new CompletedTasksSpecification(userId).IsSatisfiedBy)
 			};
 		}
+
+		public void CreateTask(string userId, string name)
+		{
+			var task = Task.Create(userId, name);
+
+			_context.Tasks.Add(task);
+			_context.SaveChanges();
+		}
+
+		public void DeleteTask(string userId, int taskId)
+		{
+			var task = GetTask(userId, taskId);
+
+			if (task == null)
+				throw new ArgumentException(nameof(taskId));
+
+			_context.Tasks.Remove(task);
+			_context.SaveChanges();
+		}
+
+		public void Activate(string userId, int taskId)
+		{
+			var task = GetTask(userId, taskId);
+
+			if (task == null)
+				throw new ArgumentException(nameof(taskId));
+
+			task.SetActive();
+			_context.SaveChanges();
+		}
+
+		public void Deactivate(string userId, int taskId)
+		{
+			var task = GetTask(userId, taskId);
+
+			if (task == null)
+				throw new ArgumentException(nameof(taskId));
+
+			task.SetInactive();
+			_context.SaveChanges();
+		}
+
+		public void UpdateTask(string userId, TaskDto dto)
+		{
+			var task = GetTask(userId, dto.Id);
+
+			if (task == null)
+				throw new ArgumentException(nameof(dto.Id));
+
+			task.Edit(dto.Name, (Priority)dto.Priority, dto.DueDate, dto.CategoryId);
+
+			_context.SaveChanges();
+		}
+
+		private Task GetTask(string userId, int taskId)
+			=> _context.Tasks.Include(t => t.Category)
+				.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
 	}
 }
