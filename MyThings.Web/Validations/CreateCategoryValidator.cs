@@ -8,8 +8,8 @@ namespace MyThings.Web.Validations
 		public CreateCategoryValidator()
 		{
 			RuleFor(p => p.Name)
-				.NotEmpty()
-				.MaximumLength(255);
+				.NotEmpty().WithMessage("Category name should not be empty.")
+				.MaximumLength(50);
 		}
 	}
 }

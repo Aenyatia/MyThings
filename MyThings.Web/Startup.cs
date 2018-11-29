@@ -10,6 +10,7 @@ using MyThings.Application.Mappers;
 using MyThings.Application.Services;
 using MyThings.Infrastructure.Data;
 using MyThings.Infrastructure.Identity;
+using MyThings.Web.Filters;
 
 namespace MyThings.Web
 {
@@ -18,9 +19,7 @@ namespace MyThings.Web
 		public IConfiguration Configuration { get; }
 
 		public Startup(IConfiguration configuration)
-		{
-			Configuration = configuration;
-		}
+			=> Configuration = configuration;
 
 		public void ConfigureServices(IServiceCollection services)
 		{
@@ -45,6 +44,8 @@ namespace MyThings.Web
 
 			services.AddScoped<TaskService>();
 			services.AddScoped<CategoryService>();
+			services.AddScoped<IUserContext, UserContext>();
+			services.AddScoped<UserContextFilter>();
 
 			services.AddSingleton(AutoMapperConfiguration.Configure());
 		}

@@ -31,11 +31,12 @@
 				<option value="0">No priority</option>
 				<option value="1">Low</option>
 				<option value="2">Medium</option>
-				<option value="3">High</option>
+				<option value="4">High</option>
 			</select>
 		</div>
 
 		<input type="hidden" asp-for="Id" value="@Model.Id" />
 		<button type="submit" class="btn btn-primary">Update</button>
+		<a asp-controller="Tasks" asp-action="Summary" class="btn btn-secondary">Cancel</a>
 	</form>
 </div>

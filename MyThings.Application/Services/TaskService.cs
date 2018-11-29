@@ -13,66 +13,65 @@ namespace MyThings.Application.Services
 	public class TaskService
 	{
 		private readonly ApplicationDbContext _context;
+		private readonly IUserContext _userContext;
 		private readonly IMapper _mapper;
 
-		public TaskService(ApplicationDbContext context, IMapper mapper)
+		public TaskService(ApplicationDbContext context, IUserContext userContext, IMapper mapper)
 		{
 			_context = context;
+			_userContext = userContext;
 			_mapper = mapper;
 		}
 
-		public TaskDto GetTaskById(string userId, int taskId)
+		public TaskDto GetTaskById(int taskId)
 		{
-			var task = GetTask(userId, taskId);
+			var task = GetTask(taskId);
 
 			return _mapper.Map<Task, TaskDto>(task);
 		}
 
-		public IEnumerable<TaskDto> GetTasksByCategory(string userId, int categoryId)
+		public IEnumerable<TaskDto> GetTasksByCategory(ISpecification specification)
 		{
-			var tasks = _context.Tasks
-				.Where(t => t.Category.Id == categoryId && t.UserId == userId &&
-							t.IsCompleted == false)
-				.ToList();
-
-			return _mapper.Map<IEnumerable<Task>, IEnumerable<TaskDto>>(tasks);
-		}
-
-		public IEnumerable<TaskDto> GetTasks(ISpecification specification, int? noOfRecords)
-		{
-			var number = noOfRecords ?? int.MaxValue;
-
 			var tasks = _context.Tasks
 				.Where(specification.IsSatisfiedBy)
-				.Take(number)
 				.ToList();
 
 			return _mapper.Map<IEnumerable<Task>, IEnumerable<TaskDto>>(tasks);
 		}
 
-		public TasksNumbersDto GetTasksNumbers(string userId)
+		public IEnumerable<TaskDto> GetTasks(ISpecification specification, int noOfRecords = int.MaxValue)
+		{
+			var tasks = _context.Tasks
+				.Where(specification.IsSatisfiedBy)
+				.Take(noOfRecords)
+				.ToList();
+
+			return _mapper.Map<IEnumerable<Task>, IEnumerable<TaskDto>>(tasks);
+		}
+
+		public TasksNumbersDto GetTasksNumbers()
 		{
 			return new TasksNumbersDto
 			{
-				Today = _context.Tasks.Count(new TodayTasksSpecification(userId).IsSatisfiedBy),
-				Tomorrow = _context.Tasks.Count(new TomorrowTasksSpecification(userId).IsSatisfiedBy),
-				Later = _context.Tasks.Count(new LaterTasksSpecification(userId).IsSatisfiedBy),
-				NotDone = _context.Tasks.Count(new NotDoneTasksSpecification(userId).IsSatisfiedBy),
-				Completed = _context.Tasks.Count(new CompletedTasksSpecification(userId).IsSatisfiedBy)
+				Today = _context.Tasks.Count(new TodayTasksSpecification(_userContext.UserId).IsSatisfiedBy),
+				Tomorrow = _context.Tasks.Count(new TomorrowTasksSpecification(_userContext.UserId).IsSatisfiedBy),
+				Later = _context.Tasks.Count(new LaterTasksSpecification(_userContext.UserId).IsSatisfiedBy),
+				NotDone = _context.Tasks.Count(new NotDoneTasksSpecification(_userContext.UserId).IsSatisfiedBy),
+				Completed = _context.Tasks.Count(new CompletedTasksSpecification(_userContext.UserId).IsSatisfiedBy)
 			};
 		}
 
-		public void CreateTask(string userId, string name)
+		public void CreateTask(string name)
 		{
-			var task = Task.Create(userId, name);
+			var task = Task.Create(_userContext.UserId, name);
 
 			_context.Tasks.Add(task);
 			_context.SaveChanges();
 		}
 
-		public void DeleteTask(string userId, int taskId)
+		public void DeleteTask(int taskId)
 		{
-			var task = GetTask(userId, taskId);
+			var task = GetTask(taskId);
 
 			if (task == null)
 				throw new ArgumentException(nameof(taskId));
@@ -81,9 +80,9 @@ namespace MyThings.Application.Services
 			_context.SaveChanges();
 		}
 
-		public void Activate(string userId, int taskId)
+		public void Activate(int taskId)
 		{
-			var task = GetTask(userId, taskId);
+			var task = GetTask(taskId);
 
 			if (task == null)
 				throw new ArgumentException(nameof(taskId));
@@ -92,9 +91,9 @@ namespace MyThings.Application.Services
 			_context.SaveChanges();
 		}
 
-		public void Deactivate(string userId, int taskId)
+		public void Deactivate(int taskId)
 		{
-			var task = GetTask(userId, taskId);
+			var task = GetTask(taskId);
 
 			if (task == null)
 				throw new ArgumentException(nameof(taskId));
@@ -103,9 +102,9 @@ namespace MyThings.Application.Services
 			_context.SaveChanges();
 		}
 
-		public void UpdateTask(string userId, TaskDto dto)
+		public void UpdateTask(TaskDto dto)
 		{
-			var task = GetTask(userId, dto.Id);
+			var task = GetTask(dto.Id);
 
 			if (task == null)
 				throw new ArgumentException(nameof(dto.Id));
@@ -115,8 +114,8 @@ namespace MyThings.Application.Services
 			_context.SaveChanges();
 		}
 
-		private Task GetTask(string userId, int taskId)
+		private Task GetTask(int taskId)
 			=> _context.Tasks.Include(t => t.Category)
-				.SingleOrDefault(t => t.Id == taskId && t.UserId == userId);
+				.SingleOrDefault(t => t.Id == taskId && t.UserId == _userContext.UserId);
 	}
 }

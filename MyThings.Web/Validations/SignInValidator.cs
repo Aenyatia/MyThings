@@ -8,11 +8,11 @@ namespace MyThings.Web.Validations
 		public SignInValidator()
 		{
 			RuleFor(p => p.Email)
-				.NotEmpty()
-				.EmailAddress();
+				.NotEmpty().WithMessage("Email is required.")
+				.EmailAddress().WithMessage("Invalid email.");
 
 			RuleFor(p => p.Password)
-				.NotEmpty();
+				.NotEmpty().WithMessage("Password is required.");
 		}
 	}
 }

@@ -8,8 +8,8 @@ namespace MyThings.Web.Validations
 		public EditTaskValidator()
 		{
 			RuleFor(p => p.Name)
-				.NotEmpty()
-				.MaximumLength(255);
+				.NotEmpty().WithMessage("Task description should not be empty.")
+				.MaximumLength(100);
 		}
 	}
 }

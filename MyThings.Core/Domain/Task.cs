@@ -23,6 +23,8 @@ namespace MyThings.Core.Domain
 			Name = name;
 			Priority = Priority.NoPriority;
 			DueDate = DateTime.Now;
+			CategoryId = null;
+			Category = null;
 			IsCompleted = false;
 			CompletedAt = null;
 		}

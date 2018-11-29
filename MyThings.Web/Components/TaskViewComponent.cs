@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyThings.Application.Services;
-using MyThings.Infrastructure.Extensions;
 
 namespace MyThings.Web.Components
 {
@@ -13,6 +12,6 @@ namespace MyThings.Web.Components
 
 		public IViewComponentResult Invoke()
 			=> View("TaskViewComponent",
-				_taskService.GetTasksNumbers(HttpContext.User.GetUserId()));
+				_taskService.GetTasksNumbers());
 	}
 }

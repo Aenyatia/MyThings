@@ -10,10 +10,11 @@
 
 	<form method="post">
 		<div class="form-group">
-			<input asp-for="Name" type="text" class="form-control" placeholder="Enter task name" />
+			<input asp-for="Name" type="text" class="form-control" placeholder="Enter task description" />
 			<span asp-validation-for="Name" class="text-danger"></span>
 		</div>
 
 		<button type="submit" class="btn btn-primary">Create</button>
+		<a asp-controller="Tasks" asp-action="Summary" class="btn btn-secondary">Cancel</a>
 	</form>
 </div>

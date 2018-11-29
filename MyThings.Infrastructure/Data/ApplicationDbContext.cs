@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyThings.Core.Domain;
+using MyThings.Infrastructure.EntityConfigurations;
 
 namespace MyThings.Infrastructure.Data
 {
 	public class ApplicationDbContext : DbContext
 	{
-		public DbSet<Task> Tasks { get; set; }
-		public DbSet<Category> Categories { get; set; }
+		public DbSet<Task> Tasks { get; protected set; }
+		public DbSet<Category> Categories { get; protected set; }
 
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
 			: base(options)
@@ -15,10 +16,8 @@ namespace MyThings.Infrastructure.Data
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Task>()
-				.HasOne(t => t.Category)
-				.WithMany()
-				.OnDelete(DeleteBehavior.SetNull);
+			modelBuilder.ApplyConfiguration(new TaskConfiguration());
+			modelBuilder.ApplyConfiguration(new CategoryConfiguration());
 		}
 	}
 }

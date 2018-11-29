@@ -9,6 +9,6 @@ namespace MyThings.Application.Dtos
 		public DateTime DueDate { get; set; }
 		public int Priority { get; set; }
 		public int? CategoryId { get; set; }
-		public CategoryDto CategoryDto { get; set; }
+		public CategoryDto Category { get; set; }
 	}
 }

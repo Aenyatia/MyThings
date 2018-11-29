@@ -1,7 +1,7 @@
-﻿@model IEnumerable<TaskDto>
+﻿@model TasksViewModel
 
 @{
-	ViewData["Title"] = "SET HEADER";
+	ViewData["Title"] = @Model.Title;
 }
 
 <div class="row">
@@ -13,27 +13,37 @@
 
 	<div class="col-lg-8">
 		<form method="post">
-			<h3>SET HEADER</h3>
+			<h3>@Model.Title</h3>
 			<ul class="list-group">
-				@if (Model.Any())
+				@if (Model.Tasks.Any())
 				{
-					foreach (var task in Model)
+					foreach (var task in Model.Tasks)
 					{
 						<li class="list-group-item list-group-item-action">
 							<div class="space-between">
 								@task.Name
 								<span class="actions">
-									<button type="submit" asp-controller="Tasks" asp-action="DeactivateTask" asp-route-taskId="@task.Id"
-											class="btn btn-sm btn-success" title="Mark as done">
-										<i class="fas fa-check"></i>
-									</button>
+									@if (Model.Title != "completed")
+									{
+										<button type="submit" asp-controller="Tasks" asp-action="DeactivateTask" asp-route-taskId="@task.Id"
+												class="btn btn-sm btn-success" title="Mark as done">
+											<i class="fas fa-check"></i>
+										</button>
+										<a asp-controller="Tasks" asp-action="EditTask" asp-route-taskId="@task.Id"
+										   class="btn btn-sm btn-secondary" title="Edit">
+											<i class="fas fa-edit"></i>
+										</a>
+									}
+									else
+									{
+										<button type="submit" asp-controller="Tasks" asp-action="ActivateTask" asp-route-taskId="@task.Id"
+												class="btn btn-sm btn-primary" title="Mark as undone">
+											<i class="fas fa-undo"></i>
+										</button>
+									}
 									<a asp-controller="Tasks" asp-action="GetTaskDetails" asp-route-taskId="@task.Id"
 									   class="btn btn-sm btn-secondary" title="Details">
 										<i class="fas fa-info-circle"></i>
-									</a>
-									<a asp-controller="Tasks" asp-action="EditTask" asp-route-taskId="@task.Id"
-									   class="btn btn-sm btn-secondary" title="Edit">
-										<i class="fas fa-edit"></i>
 									</a>
 									<button type="submit" asp-controller="Tasks" asp-action="DeleteTask" asp-route-taskId="@task.Id"
 											class="btn btn-sm btn-danger" title="Delete">

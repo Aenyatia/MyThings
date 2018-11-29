@@ -1,20 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyThings.Application.Services;
-using MyThings.Infrastructure.Extensions;
 using MyThings.Web.Commands;
+using MyThings.Web.Filters;
 
 namespace MyThings.Web.Controllers
 {
 	[Authorize]
+	[TypeFilter(typeof(UserContextFilter))]
 	public class CategoriesController : Controller
 	{
 		private readonly CategoryService _categoryService;
 
 		public CategoriesController(CategoryService categoryService)
-		{
-			_categoryService = categoryService;
-		}
+			=> _categoryService = categoryService;
 
 		[HttpGet]
 		public IActionResult CreateCategory() => View();
@@ -26,24 +25,20 @@ namespace MyThings.Web.Controllers
 			if (!ModelState.IsValid)
 				return View(command);
 
-			_categoryService.CreateCategory(User.GetUserId(), command.Name);
+			_categoryService.CreateCategory(command.Name);
 
 			return RedirectToAction("Summary", "Tasks");
 		}
 
 		[HttpGet]
 		public IActionResult ManageCategories()
-		{
-			var categories = _categoryService.GetUserCategories(User.GetUserId());
-
-			return View(categories);
-		}
+			=> View(_categoryService.GetUserCategories());
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult DeleteCategory(int categoryId)
 		{
-			_categoryService.DeleteCategory(User.GetUserId(), categoryId);
+			_categoryService.DeleteCategory(categoryId);
 
 			return RedirectToAction("ManageCategories", "Categories");
 		}

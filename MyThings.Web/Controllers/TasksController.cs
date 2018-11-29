@@ -3,81 +3,84 @@ using Microsoft.AspNetCore.Mvc;
 using MyThings.Application.Dtos;
 using MyThings.Application.Services;
 using MyThings.Application.Specifications;
-using MyThings.Infrastructure.Extensions;
 using MyThings.Web.Commands;
+using MyThings.Web.Filters;
 using MyThings.Web.ViewModels;
+using System.Collections.Generic;
 
 namespace MyThings.Web.Controllers
 {
 	[Authorize]
+	[TypeFilter(typeof(UserContextFilter))]
 	public class TasksController : Controller
 	{
 		private readonly TaskService _taskService;
 		private readonly CategoryService _categoryService;
+		private readonly IUserContext _userContext;
 
-		public TasksController(TaskService taskService, CategoryService categoryService)
+		public TasksController(TaskService taskService, CategoryService categoryService, IUserContext userContext)
 		{
 			_taskService = taskService;
 			_categoryService = categoryService;
+			_userContext = userContext;
 		}
 
 		[HttpGet("tasks/today")]
 		public IActionResult GetTodayTasks()
 		{
-			var userId = User.GetUserId();
-			var tasks = _taskService.GetTasks(new TodayTasksSpecification(userId), null);
+			var tasks = _taskService.GetTasks(new TodayTasksSpecification(_userContext.UserId));
 
-			return View("Tasks", tasks);
+			return View("Tasks", CreateTasksViewModel("today", tasks));
 		}
 
 		[HttpGet("tasks/tomorrow")]
 		public IActionResult GetTomorrowTasks()
 		{
-			var userId = User.GetUserId();
-			var tasks = _taskService.GetTasks(new TomorrowTasksSpecification(userId), null);
+			var tasks = _taskService.GetTasks(new TomorrowTasksSpecification(_userContext.UserId));
 
-			return View("Tasks", tasks);
+			return View("Tasks", CreateTasksViewModel("tomorrow", tasks));
 		}
 
 		[HttpGet("tasks/later")]
 		public IActionResult GetLaterTasks()
 		{
-			var userId = User.GetUserId();
-			var tasks = _taskService.GetTasks(new LaterTasksSpecification(userId), null);
+			var tasks = _taskService.GetTasks(new LaterTasksSpecification(_userContext.UserId));
 
-			return View("Tasks", tasks);
+			return View("Tasks", CreateTasksViewModel("later", tasks));
 		}
 
 		[HttpGet("tasks/undone")]
 		public IActionResult GetUndoneTasks()
 		{
-			var userId = User.GetUserId();
-			var tasks = _taskService.GetTasks(new NotDoneTasksSpecification(userId), null);
+			var tasks = _taskService.GetTasks(new NotDoneTasksSpecification(_userContext.UserId));
 
-			return View("Tasks", tasks);
+			return View("Tasks", CreateTasksViewModel("not done", tasks));
 		}
 
 		[HttpGet("tasks/completed")]
 		public IActionResult GetCompletedTasks()
 		{
-			var userId = User.GetUserId();
-			var tasks = _taskService.GetTasks(new CompletedTasksSpecification(userId), null);
+			var tasks = _taskService.GetTasks(new CompletedTasksSpecification(_userContext.UserId));
 
-			return View("Tasks", tasks);
+			return View("Tasks", CreateTasksViewModel("completed", tasks));
 		}
 
 		[HttpGet("tasks/category/{categoryId}")]
 		public IActionResult GetTasksByCategory(int categoryId)
 		{
-			var tasks = _taskService.GetTasksByCategory(User.GetUserId(), categoryId);
+			var tasks = _taskService.GetTasksByCategory(
+				new TasksWithCategory(_userContext.UserId, categoryId));
 
-			return View("Tasks", tasks);
+			return View("Tasks", CreateTasksViewModel("category", tasks));
 		}
 
 		[HttpGet("tasks/details/{taskId}")]
 		public IActionResult GetTaskDetails(int taskId)
 		{
-			var task = _taskService.GetTaskById(User.GetUserId(), taskId);
+			var task = _taskService.GetTaskById(taskId);
+
+			if (task == null)
+				return NotFound();
 
 			return View("Details", task);
 		}
@@ -85,13 +88,16 @@ namespace MyThings.Web.Controllers
 		[HttpGet("tasks/summary")]
 		public IActionResult Summary()
 		{
-			var userId = User.GetUserId();
 			var viewModel = new SummaryViewModel
 			{
-				TodayTasks = _taskService.GetTasks(new TodayTasksSpecification(userId), 5),
-				TomorrowTasks = _taskService.GetTasks(new TomorrowTasksSpecification(userId), 5),
-				LaterTasks = _taskService.GetTasks(new LaterTasksSpecification(userId), 5),
-				RecentlyCompletedTasks = _taskService.GetTasks(new CompletedTasksSpecification(userId), 5)
+				TodayTasks = _taskService.GetTasks(
+					new TodayTasksSpecification(_userContext.UserId), 3),
+				TomorrowTasks = _taskService.GetTasks(
+					new TomorrowTasksSpecification(_userContext.UserId), 3),
+				LaterTasks = _taskService.GetTasks(
+					new LaterTasksSpecification(_userContext.UserId), 3),
+				RecentlyCompletedTasks = _taskService.GetTasks(
+					new CompletedTasksSpecification(_userContext.UserId), 3)
 			};
 
 			return View(viewModel);
@@ -107,7 +113,7 @@ namespace MyThings.Web.Controllers
 			if (!ModelState.IsValid)
 				return View(command);
 
-			_taskService.CreateTask(User.GetUserId(), command.Name);
+			_taskService.CreateTask(command.Name);
 
 			return RedirectToAction("Summary", "Tasks");
 		}
@@ -115,7 +121,7 @@ namespace MyThings.Web.Controllers
 		[HttpGet]
 		public IActionResult EditTask(int taskId)
 		{
-			var task = _taskService.GetTaskById(User.GetUserId(), taskId);
+			var task = _taskService.GetTaskById(taskId);
 
 			if (task == null)
 				return NotFound();
@@ -127,7 +133,7 @@ namespace MyThings.Web.Controllers
 				DueDate = task.DueDate,
 				PriorityId = task.Priority,
 				CategoryId = task.CategoryId,
-				Categories = _categoryService.GetUserCategories(User.GetUserId())
+				Categories = _categoryService.GetUserCategories()
 			};
 
 			return View(command);
@@ -139,7 +145,7 @@ namespace MyThings.Web.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				command.Categories = _categoryService.GetUserCategories(User.GetUserId());
+				command.Categories = _categoryService.GetUserCategories();
 				return View(command);
 			}
 
@@ -149,10 +155,10 @@ namespace MyThings.Web.Controllers
 				Name = command.Name,
 				DueDate = command.DueDate,
 				Priority = command.PriorityId,
-				CategoryId = command.GetCategoryId()
+				CategoryId = command.CategoryId
 			};
 
-			_taskService.UpdateTask(User.GetUserId(), taskDto);
+			_taskService.UpdateTask(taskDto);
 
 			return RedirectToAction("Summary", "Tasks");
 		}
@@ -161,7 +167,7 @@ namespace MyThings.Web.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult DeleteTask(int taskId)
 		{
-			_taskService.DeleteTask(User.GetUserId(), taskId);
+			_taskService.DeleteTask(taskId);
 
 			return RedirectToAction("Summary", "Tasks");
 		}
@@ -170,7 +176,7 @@ namespace MyThings.Web.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult ActivateTask(int taskId)
 		{
-			_taskService.Activate(User.GetUserId(), taskId);
+			_taskService.Activate(taskId);
 
 			return RedirectToAction("Summary", "Tasks");
 		}
@@ -179,9 +185,16 @@ namespace MyThings.Web.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult DeactivateTask(int taskId)
 		{
-			_taskService.Deactivate(User.GetUserId(), taskId);
+			_taskService.Deactivate(taskId);
 
 			return RedirectToAction("Summary", "Tasks");
 		}
+
+		private static TasksViewModel CreateTasksViewModel(string title, IEnumerable<TaskDto> tasks)
+			=> new TasksViewModel
+			{
+				Tasks = tasks,
+				Title = title
+			};
 	}
 }
