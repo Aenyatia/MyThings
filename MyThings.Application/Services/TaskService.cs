@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace MyThings.Application.Services
 {
-	public class TaskService
+	public class TaskService : ITaskService
 	{
 		private readonly ApplicationDbContext _context;
 		private readonly IUserContext _userContext;
