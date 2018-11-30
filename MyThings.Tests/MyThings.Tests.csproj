@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="5.5.1" />
+    <PackageReference Include="FluentAssertions" Version="5.5.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Moq" Version="4.10.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -13,6 +14,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyThings.Application\MyThings.Application.csproj" />
+    <ProjectReference Include="..\MyThings.Core\MyThings.Core.csproj" />
+    <ProjectReference Include="..\MyThings.Infrastructure\MyThings.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

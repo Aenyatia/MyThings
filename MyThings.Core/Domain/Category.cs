@@ -1,4 +1,6 @@
-﻿namespace MyThings.Core.Domain
+﻿using System;
+
+namespace MyThings.Core.Domain
 {
 	public class Category
 	{
@@ -14,6 +16,11 @@
 		}
 
 		public static Category Create(string userId, string name)
-			=> new Category(userId, name);
+		{
+			if (userId == null) throw new ArgumentNullException(nameof(userId));
+			if (name == null) throw new ArgumentNullException(nameof(name));
+
+			return new Category(userId, name);
+		}
 	}
 }

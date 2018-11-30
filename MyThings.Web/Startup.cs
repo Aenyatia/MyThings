@@ -45,7 +45,7 @@ namespace MyThings.Web
 			services.AddScoped<TaskService>();
 			services.AddScoped<CategoryService>();
 			services.AddScoped<IUserContext, UserContext>();
-			services.AddScoped<UserContextFilter>();
+			//services.AddScoped<UserContextFilter>();
 
 			services.AddSingleton(AutoMapperConfiguration.Configure());
 		}

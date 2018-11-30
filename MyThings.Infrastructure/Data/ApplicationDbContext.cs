@@ -6,8 +6,8 @@ namespace MyThings.Infrastructure.Data
 {
 	public class ApplicationDbContext : DbContext
 	{
-		public DbSet<Task> Tasks { get; protected set; }
-		public DbSet<Category> Categories { get; protected set; }
+		public virtual DbSet<Task> Tasks { get; protected set; }
+		public virtual DbSet<Category> Categories { get; protected set; }
 
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
 			: base(options)

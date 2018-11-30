@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace MyThings.Application.Services
 {
-	public class CategoryService
+	public class CategoryService : ICategoryService
 	{
 		private readonly ApplicationDbContext _context;
 		private readonly IUserContext _userContext;

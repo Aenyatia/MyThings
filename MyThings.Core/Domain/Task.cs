@@ -30,12 +30,17 @@ namespace MyThings.Core.Domain
 		}
 
 		public static Task Create(string userId, string name)
-			=> new Task(userId, name);
+		{
+			if (userId == null) throw new ArgumentNullException(nameof(userId));
+			if (name == null) throw new ArgumentNullException(nameof(name));
+
+			return new Task(userId, name);
+		}
 
 		public void SetActive()
 		{
 			if (!IsCompleted)
-				return;
+				throw new InvalidOperationException();
 
 			IsCompleted = false;
 			CompletedAt = null;
@@ -44,7 +49,7 @@ namespace MyThings.Core.Domain
 		public void SetInactive()
 		{
 			if (IsCompleted)
-				return;
+				throw new InvalidOperationException();
 
 			IsCompleted = true;
 			CompletedAt = DateTime.Now;
@@ -52,7 +57,7 @@ namespace MyThings.Core.Domain
 
 		public void Edit(string name, Priority priority, DateTime dueDate, int? categoryId)
 		{
-			Name = name;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Priority = priority;
 			DueDate = dueDate;
 			CategoryId = categoryId;
